@@ -1,0 +1,210 @@
+<UserControl x:Class="StorePOS.Views.SalesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:StorePOS.Infrastructure">
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="456" />
+            <ColumnDefinition Width="16" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Products panel -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Style="{StaticResource H20}" Text="{l:Tr Sales_Products}" />
+
+            <DockPanel Grid.Row="2">
+                <TextBlock Style="{StaticResource Label}" Text="{l:Tr Search}" Margin="0,0,8,0" />
+                <TextBox x:Name="SearchBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                         l:Ui.Placeholder="{l:Tr Search_ProductPlaceholder}"
+                         AutomationProperties.Name="{l:Tr Search}" PreviewKeyDown="SearchBox_PreviewKeyDown" />
+            </DockPanel>
+
+            <DataGrid x:Name="ProductGrid" Grid.Row="4" ItemsSource="{Binding ProductsView}"
+                      SelectedItem="{Binding SelectedProduct}" MouseDoubleClick="ProductGrid_MouseDoubleClick"
+                      AutomationProperties.Name="{l:Tr Sales_Products}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="{l:Tr Col_Name}" Binding="{Binding Name}" Width="*" ElementStyle="{StaticResource CellText}" />
+                    <DataGridTextColumn Header="{l:Tr Col_Unit}" Binding="{Binding Unit}" Width="Auto" MinWidth="84" ElementStyle="{StaticResource CellText}" />
+                    <DataGridTextColumn Header="{l:Tr Col_PriceKs}" Binding="{Binding PriceText}" Width="Auto" MinWidth="100"
+                                        ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="6" Style="{StaticResource WhitePanel}" Padding="12">
+                <StackPanel>
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="{l:Tr Sales_Selected}" Foreground="{StaticResource TextSecondary}" />
+                        <Run Text="{Binding SelectedName, Mode=OneWay}" FontWeight="SemiBold" />
+                    </TextBlock>
+                    <DockPanel Margin="0,8,0,0">
+                        <Button DockPanel.Dock="Right" Content="{l:Tr Sales_AddToCart}" Command="{Binding AddToCartCommand}" />
+                        <TextBlock Style="{StaticResource Label}" Text="{l:Tr Sales_Quantity}" Margin="0,0,8,0" />
+                        <TextBox x:Name="QtyBox" Style="{StaticResource MoneyTextBox}" Width="88"
+                                 Text="{Binding QuantityText, UpdateSourceTrigger=PropertyChanged}"
+                                 AutomationProperties.Name="{l:Tr Sales_Quantity}" GotKeyboardFocus="SelectAll">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Enter" Command="{Binding AddToCartCommand}" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <TextBlock Style="{StaticResource Label}" Text="{Binding SelectedProduct.Unit}" Margin="8,0" />
+                    </DockPanel>
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,4,0,0" Text="{Binding QuantityHint}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Cart panel -->
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="64" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Style="{StaticResource Secondary}" Text="{Binding ItemCountText}" VerticalAlignment="Bottom" />
+                <TextBlock Style="{StaticResource H20}" Text="{l:Tr Sales_Cart}" />
+            </DockPanel>
+
+            <Grid Grid.Row="2">
+                <DataGrid ItemsSource="{Binding Cart}" MinRowHeight="52" CellStyle="{StaticResource InputCell}"
+                          KeyboardNavigation.TabNavigation="Continue" AutomationProperties.Name="{l:Tr Sales_Cart}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="{l:Tr Col_Item}" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="10,6" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding ChangedNote}" Style="{StaticResource Hint}"
+                                                   Visibility="{Binding IsPriceChanged, Converter={StaticResource BoolToVisible}}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{l:Tr Col_Quantity}" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBox Style="{StaticResource CellTextBox}" Width="60"
+                                                 Text="{Binding QtyText, UpdateSourceTrigger=PropertyChanged}"
+                                                 AutomationProperties.Name="{Binding QtyLabel}" />
+                                        <TextBlock Text="{Binding Unit}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="{l:Tr Col_UnitPriceKs}" Width="Auto" MinWidth="128" HeaderStyle="{StaticResource NumHeader}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource CellTextBox}" Margin="10,0"
+                                             Text="{Binding PriceText, UpdateSourceTrigger=PropertyChanged}"
+                                             AutomationProperties.Name="{Binding PriceLabel}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="{l:Tr Col_AmountKs}" Binding="{Binding AmountText}" Width="Auto" MinWidth="112"
+                                            ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                        <!-- 96, not 84: "Remove" must never be clipped (Burmese checklist: no truncation). -->
+                        <DataGridTemplateColumn Width="96">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource SmallButton}" MinWidth="0" Padding="6,0" Margin="8,0"
+                                            Content="{l:Tr Sales_Remove}"
+                                            Command="{Binding DataContext.RemoveLineCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                            CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <TextBlock Style="{StaticResource EmptyState}" Text="{l:Tr Sales_CartEmpty}"
+                           Visibility="{Binding Cart.Count, Converter={StaticResource BoolToCollapsed}}" />
+            </Grid>
+
+            <!-- Total bar -->
+            <Border Grid.Row="4" Style="{StaticResource WhitePanel}" Padding="16,0">
+                <DockPanel>
+                    <TextBlock Style="{StaticResource H20}" Text="{l:Tr Sales_Total}" VerticalAlignment="Center" />
+                    <TextBlock Style="{StaticResource Total36}" Text="{Binding TotalText}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </DockPanel>
+            </Border>
+
+            <!-- Payment -->
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="132" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="Auto" MinWidth="200" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{StaticResource Label}" Text="{l:Tr Sales_AmountPaid}" TextWrapping="Wrap" />
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <TextBox x:Name="PaidBox" Style="{StaticResource BigMoneyTextBox}" Width="168"
+                             Text="{Binding PaidText, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="{l:Tr Sales_AmountPaid}" GotKeyboardFocus="SelectAll" />
+                    <TextBlock Style="{StaticResource Label}" Text="{l:Tr Ks}" Margin="8,0,0,0" />
+                </StackPanel>
+                <Border Grid.Column="4" Style="{StaticResource WhitePanel}" Height="44" Padding="16,0">
+                    <DockPanel Visibility="{Binding ShowResult, Converter={StaticResource BoolToVisible}}">
+                        <TextBlock Text="{Binding ResultLabel}" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding ResultText}" FontSize="24" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    </DockPanel>
+                </Border>
+
+                <TextBlock Grid.Row="2" Text="{l:Tr Sales_Customer}" VerticalAlignment="Top" Margin="0,10,0,0" />
+                <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Margin="8,0,0,0" Content="{l:Tr Sales_NewCustomer}" Command="{Binding NewCustomerCommand}" />
+                        <ComboBox ItemsSource="{Binding Customers}" SelectedItem="{Binding SelectedCustomer}" DisplayMemberPath="Display"
+                                  IsTextSearchEnabled="True" TextSearch.TextPath="Display" AutomationProperties.Name="{l:Tr Sales_Customer}" />
+                    </DockPanel>
+                    <TextBlock Margin="0,4,0,0" Text="{Binding CustomerHint}" TextWrapping="Wrap"
+                               FontWeight="{Binding CustomerRequired, Converter={StaticResource BoolToSemiBold}}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CustomerRequired}" Value="True">
+                                        <Setter Property="Foreground" Value="{StaticResource Text}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+            <DockPanel Grid.Row="8">
+                <Button DockPanel.Dock="Left" Content="{l:Tr Sales_ClearCart}" Command="{Binding ClearCartCommand}" />
+                <Button DockPanel.Dock="Right" Style="{StaticResource LargePrimaryButton}" MinWidth="220"
+                        Content="{l:Tr Sales_Save}" Command="{Binding SaveCommand}" />
+                <TextBlock Text="{Binding FooterText}" Style="{StaticResource Warning}" TextAlignment="Right"
+                           VerticalAlignment="Center" Margin="16,0" />
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

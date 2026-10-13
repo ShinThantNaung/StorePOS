@@ -1,0 +1,112 @@
+<UserControl x:Class="StorePOS.Views.CustomerDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:StorePOS.Infrastructure">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Button Command="{Binding BackCommand}" Padding="14,0,20,0">
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource ChevronLeft}" Margin="0,0,8,0" />
+                    <TextBlock Text="{l:Tr Customer_Back}" />
+                </StackPanel>
+            </Button>
+            <Button Content="{l:Tr Customer_Edit}" Command="{Binding EditCommand}" Margin="8,0,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="2" Style="{StaticResource WhitePanel}" Padding="16">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel HorizontalAlignment="Right">
+                        <TextBlock Style="{StaticResource Secondary}" Text="{l:Tr Customer_StillOwes}" HorizontalAlignment="Right" />
+                        <TextBlock Style="{StaticResource Figure28}" Text="{Binding BalanceText}" HorizontalAlignment="Right" />
+                    </StackPanel>
+                    <Button Style="{StaticResource LargePrimaryButton}" Margin="32,0,0,0" Content="{l:Tr Customer_RecordRepayment}"
+                            Command="{Binding RecordRepaymentCommand}" />
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center" Margin="0,0,24,0">
+                    <TextBlock Style="{StaticResource H24}" Text="{Binding Name}" />
+                    <TextBlock Style="{StaticResource Hint}" Text="{Binding AddressLine}" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <DockPanel Grid.Row="4">
+            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Secondary}" Text="{Binding CountText}" />
+            <TextBlock Style="{StaticResource H20}" Text="{l:Tr Customer_History}" />
+        </DockPanel>
+
+        <DataGrid Grid.Row="6" ItemsSource="{Binding Rows}" CellStyle="{StaticResource InputCell}"
+                  AutomationProperties.Name="{l:Tr Customer_History}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="{l:Tr Col_Date}" Width="140">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource CellText}" VerticalAlignment="Top" Text="{Binding DateText}"
+                                       Foreground="{Binding IsCancelled, Converter={StaticResource BoolToSecondary}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{l:Tr Col_Details}" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DockPanel Margin="10,8">
+                                <Button DockPanel.Dock="Right" Style="{StaticResource SmallButton}" VerticalAlignment="Top" Margin="8,0,0,0"
+                                        Content="{l:Tr Customer_Reverse}"
+                                        Visibility="{Binding CanReverse, Converter={StaticResource BoolToVisible}}"
+                                        Command="{Binding DataContext.ReverseCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}" />
+                                <StackPanel TextElement.Foreground="{Binding IsCancelled, Converter={StaticResource BoolToSecondary}}">
+                                    <TextBlock Text="{Binding Title}" TextWrapping="Wrap"
+                                               FontWeight="{Binding TitleSemiBold, Converter={StaticResource BoolToSemiBold}}" />
+                                    <TextBlock Text="{Binding ItemsText}" TextWrapping="Wrap"
+                                               Visibility="{Binding HasItems, Converter={StaticResource BoolToVisible}}" />
+                                    <WrapPanel Visibility="{Binding ShowVoidedTag, Converter={StaticResource BoolToVisible}}" Margin="0,2,0,0">
+                                        <Border Style="{StaticResource Tag}" Margin="0,0,6,0">
+                                            <TextBlock Text="{l:Tr Voided}" />
+                                        </Border>
+                                        <TextBlock Text="{Binding VoidReason}" TextWrapping="Wrap" />
+                                    </WrapPanel>
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{l:Tr Col_OnCreditKs}" Width="150" HeaderStyle="{StaticResource NumHeader}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource CellNum}" Margin="10,8" VerticalAlignment="Top" Text="{Binding CreditText}"
+                                       Foreground="{Binding IsCancelled, Converter={StaticResource BoolToSecondary}}"
+                                       TextDecorations="{Binding IsCancelled, Converter={StaticResource BoolToStrike}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{l:Tr Col_RepaidKs}" Width="140" HeaderStyle="{StaticResource NumHeader}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource CellNum}" Margin="10,8" VerticalAlignment="Top" Text="{Binding RepaidText}"
+                                       Foreground="{Binding IsCancelled, Converter={StaticResource BoolToSecondary}}"
+                                       TextDecorations="{Binding IsCancelled, Converter={StaticResource BoolToStrike}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{l:Tr Col_BalanceKs}" Width="150" HeaderStyle="{StaticResource NumHeader}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource CellNumBold}" Margin="10,8" VerticalAlignment="Top" Text="{Binding BalanceText}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

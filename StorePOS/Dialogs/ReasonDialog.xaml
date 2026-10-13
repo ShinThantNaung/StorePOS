@@ -1,0 +1,49 @@
+<Window x:Class="StorePOS.Dialogs.ReasonDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:StorePOS.Infrastructure"
+        Style="{StaticResource DialogWindow}" Title="{l:Tr App_Title}" Width="560">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="TitleText" Style="{StaticResource H24}" />
+
+        <Border Grid.Row="2" Style="{StaticResource WhitePanel}" Padding="12,8">
+            <ItemsControl x:Name="Summary" Focusable="False">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Style="{StaticResource Hint}" Text="{Binding Label}" />
+                            <TextBlock Grid.Column="1" Style="{StaticResource Paragraph}" Text="{Binding Value}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <TextBlock x:Name="ParagraphText" Grid.Row="4" Style="{StaticResource Paragraph}" />
+        <TextBlock Grid.Row="6" Text="{l:Tr Reason_Label}" FontWeight="SemiBold" />
+        <TextBox x:Name="ReasonBox" Grid.Row="8" TextChanged="ReasonBox_TextChanged" AutomationProperties.Name="{l:Tr Reason_Label}" />
+
+        <StackPanel Grid.Row="10" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{l:Tr Dialog_Cancel}" IsCancel="True" />
+            <Button x:Name="ActionButton" Style="{StaticResource PrimaryButton}" MinWidth="150" Margin="8,0,0,0"
+                    IsEnabled="False" Click="Action_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

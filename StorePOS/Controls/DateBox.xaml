@@ -1,0 +1,23 @@
+<UserControl x:Class="StorePOS.Controls.DateBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:StorePOS.Infrastructure"
+             x:Name="Self">
+    <StackPanel Orientation="Horizontal">
+        <TextBox x:Name="Box" IsReadOnly="True" Cursor="Arrow" MinWidth="{Binding BoxWidth, ElementName=Self}"
+                 Text="{Binding DisplayText, ElementName=Self, Mode=OneWay}"
+                 AutomationProperties.Name="{Binding Label, ElementName=Self}"
+                 PreviewMouseLeftButtonUp="Open" PreviewKeyDown="Box_PreviewKeyDown" />
+        <Button Style="{StaticResource IconButton}" Margin="8,0,0,0" Click="Open"
+                AutomationProperties.Name="{l:Tr ChooseDate}">
+            <Path Style="{StaticResource Icon}" Data="{StaticResource CalendarIcon}" />
+        </Button>
+        <Popup x:Name="Pop" PlacementTarget="{Binding ElementName=Box}" Placement="Bottom" StaysOpen="False" VerticalOffset="4">
+            <Border Background="{StaticResource White}" BorderBrush="{StaticResource Grey500}" BorderThickness="1" Padding="4">
+                <Viewbox Width="330">
+                    <Calendar x:Name="Cal" SelectedDatesChanged="Cal_SelectedDatesChanged" />
+                </Viewbox>
+            </Border>
+        </Popup>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>StorePOS</RootNamespace>
+    <AssemblyTitle>Store POS</AssemblyTitle>
+    <Product>Store POS</Product>
+    <Version>1.0.0</Version>
+    <!-- Only the Burmese satellite of our own Strings.resx; skip other languages shipped in packages. -->
+    <SatelliteResourceLanguages>my</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="System.IO" />
+    <InternalsVisibleTo Include="StorePOS.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+    <PackageReference Include="QuestPDF" Version="2026.9.1" />
+  </ItemGroup>
+
+</Project>

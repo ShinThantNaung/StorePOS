@@ -1,0 +1,285 @@
+<UserControl x:Class="StorePOS.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:StorePOS.Infrastructure"
+             xmlns:c="clr-namespace:StorePOS.Controls">
+    <UserControl.Resources>
+        <Style x:Key="FigurePanel" TargetType="Border" BasedOn="{StaticResource WhitePanel}">
+            <Setter Property="Padding" Value="16,10" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="{l:Tr Report_SaveExcel}" Command="{Binding ExportExcelCommand}" />
+                <Button Content="{l:Tr Report_SavePdf}" Command="{Binding ExportPdfCommand}" Margin="8,0,0,0" />
+            </StackPanel>
+            <!-- Wraps to a second line instead of sliding under the export buttons when Burmese text is long. -->
+            <WrapPanel Orientation="Horizontal">
+                <RadioButton Style="{StaticResource ToggleFilterButton}" MinWidth="110" l:Ui.CornerRadius="2,0,0,2"
+                             Content="{l:Tr Report_Daily}"
+                             IsChecked="{Binding Mode, Converter={StaticResource Eq}, ConverterParameter=Daily}" />
+                <RadioButton Style="{StaticResource ToggleFilterButton}" MinWidth="110" l:Ui.CornerRadius="0,2,2,0" Margin="-1,0,0,0"
+                             Content="{l:Tr Report_Weekly}"
+                             IsChecked="{Binding Mode, Converter={StaticResource Eq}, ConverterParameter=Weekly}" />
+
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsDaily, Converter={StaticResource BoolToVisible}}">
+                    <TextBlock Style="{StaticResource Label}" Text="{l:Tr Report_Date}" Margin="24,0,8,0" />
+                    <c:DateBox BoxWidth="200" SelectedDate="{Binding Day}" DisplayText="{Binding DayText}" MaxDate="{Binding MaxDate}"
+                               Label="{l:Tr Report_Date}" />
+                    <Button Style="{StaticResource IconButton}" Margin="8,0,0,0" Command="{Binding PrevCommand}"
+                            AutomationProperties.Name="{l:Tr Report_PrevDay}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource ChevronLeft}" />
+                    </Button>
+                    <Button Style="{StaticResource IconButton}" Margin="8,0,0,0" Command="{Binding NextCommand}"
+                            AutomationProperties.Name="{l:Tr Report_NextDay}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource ChevronRight}" />
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsWeekly, Converter={StaticResource BoolToVisible}}">
+                    <TextBlock Style="{StaticResource Label}" Text="{l:Tr Report_Week}" Margin="24,0,8,0" />
+                    <c:DateBox BoxWidth="280" SelectedDate="{Binding WeekStart}" DisplayText="{Binding WeekText}" MaxDate="{Binding MaxDate}"
+                               Label="{l:Tr Report_Week}" />
+                    <Button Style="{StaticResource IconButton}" Margin="8,0,0,0" Command="{Binding PrevCommand}"
+                            AutomationProperties.Name="{l:Tr Report_PrevWeek}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource ChevronLeft}" />
+                    </Button>
+                    <Button Style="{StaticResource IconButton}" Margin="8,0,0,0" Command="{Binding NextCommand}"
+                            AutomationProperties.Name="{l:Tr Report_NextWeek}">
+                        <Path Style="{StaticResource Icon}" Data="{StaticResource ChevronRight}" />
+                    </Button>
+                </StackPanel>
+            </WrapPanel>
+        </DockPanel>
+
+        <!-- Four figures -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource FigurePanel}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Report_TotalSold}" />
+                    <TextBlock Style="{StaticResource Figure28}" Text="{Binding TotalSoldText}" />
+                    <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Report_TotalSoldNote}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource FigurePanel}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Report_Cash}" />
+                    <TextBlock Style="{StaticResource Figure28}" Text="{Binding CashText}" />
+                    <TextBlock Style="{StaticResource Hint}" Text="{Binding CashNote}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="4" Style="{StaticResource FigurePanel}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Report_Credit}" />
+                    <TextBlock Style="{StaticResource Figure28}" Text="{Binding CreditText}" />
+                    <TextBlock Style="{StaticResource Hint}" Text="{Binding CreditNote}" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="6" Style="{StaticResource FigurePanel}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Report_Count}" />
+                    <TextBlock Style="{StaticResource Figure28}" Text="{Binding SalesCountText}" />
+                    <TextBlock Style="{StaticResource Hint}" Text="{Binding SalesCountNote}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Lower area: best | slow | sales of the day or bars -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="330" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource H20}" Text="{l:Tr Report_Best}" Margin="0,0,0,8" />
+                <DataGrid x:Name="BestGrid" ItemsSource="{Binding Best}" CanUserSortColumns="True" Sorting="BestGrid_Sorting"
+                          AutomationProperties.Name="{l:Tr Report_Best}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Rank}" Width="36" CanUserSort="False"
+                                            HeaderStyle="{StaticResource NumHeader}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CellNum}">
+                                    <Setter Property="Margin" Value="0,0,8,0" />
+                                    <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="{l:Tr Col_Product}" Binding="{Binding Name}" Width="*" CanUserSort="False"
+                                            ElementStyle="{StaticResource CellText}" />
+                        <DataGridTextColumn x:Name="QtyColumn" Header="{l:Tr Col_Qty}" Binding="{Binding QtyText}" Width="Auto" MinWidth="84"
+                                            SortMemberPath="Qty" ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                        <DataGridTextColumn x:Name="KsColumn" Header="{l:Tr Col_Ks}" Binding="{Binding AmountText}" Width="104"
+                                            SortMemberPath="Ks" ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+
+            <DockPanel Grid.Column="2">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource H20}" Text="{l:Tr Report_Slow}" Margin="0,0,0,8" />
+                <TextBlock DockPanel.Dock="Bottom" Style="{StaticResource Hint}" Text="{l:Tr Report_SlowNote}" Margin="0,8,0,0" />
+                <DataGrid ItemsSource="{Binding Slow}" AutomationProperties.Name="{l:Tr Report_Slow}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{l:Tr Col_Product}" Binding="{Binding Name}" Width="*" ElementStyle="{StaticResource CellText}" />
+                        <DataGridTextColumn Header="{l:Tr Col_Qty}" Binding="{Binding QtyText}" Width="Auto" MinWidth="64"
+                                            ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                        <DataGridTextColumn Header="{l:Tr Col_Ks}" Binding="{Binding AmountText}" Width="92"
+                                            ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+
+            <!-- Daily: the day's sales, each one opens to show its items -->
+            <DockPanel Grid.Column="4" Visibility="{Binding IsDaily, Converter={StaticResource BoolToVisible}}">
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                    <TextBlock DockPanel.Dock="Right" Style="{StaticResource Secondary}" Text="{Binding DayCountText}" />
+                    <TextBlock Style="{StaticResource H20}" Text="{Binding DayTitle}" />
+                </DockPanel>
+                <Grid>
+                    <!-- Details are always "visible" to the grid; the template itself collapses unless the row is expanded. -->
+                    <DataGrid ItemsSource="{Binding DaySales}" CellStyle="{StaticResource InputCell}" SelectionMode="Single"
+                              RowDetailsVisibilityMode="Visible" AutomationProperties.Name="{Binding DayTitle}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentTint}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="{l:Tr Col_Time}" Width="88">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource CellText}" VerticalAlignment="Top" Text="{Binding TimeText}"
+                                                   Foreground="{Binding IsVoided, Converter={StaticResource BoolToSecondary}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{l:Tr Col_Customer}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="10,8" TextElement.Foreground="{Binding IsVoided, Converter={StaticResource BoolToSecondary}}">
+                                            <TextBlock Text="{Binding CustomerText}" TextWrapping="Wrap" />
+                                            <WrapPanel Visibility="{Binding IsVoided, Converter={StaticResource BoolToVisible}}">
+                                                <Border Style="{StaticResource Tag}" Margin="0,0,6,0">
+                                                    <TextBlock Text="{l:Tr Voided}" />
+                                                </Border>
+                                                <TextBlock Text="{Binding VoidReason}" TextWrapping="Wrap" />
+                                            </WrapPanel>
+                                            <TextBlock Style="{StaticResource Hint}" Text="{Binding OwesText}"
+                                                       Visibility="{Binding HasOwes, Converter={StaticResource BoolToVisible}}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{l:Tr Col_Total}" Width="96" HeaderStyle="{StaticResource NumHeader}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource CellNum}" Margin="10,8" VerticalAlignment="Top" Text="{Binding TotalText}"
+                                                   Foreground="{Binding IsVoided, Converter={StaticResource BoolToSecondary}}"
+                                                   TextDecorations="{Binding IsVoided, Converter={StaticResource BoolToStrike}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="44">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource ExpandButton}" VerticalAlignment="Top" Margin="0,4,0,0"
+                                                Command="{Binding ToggleCommand}" AutomationProperties.Name="{Binding ToggleLabel}">
+                                            <Path x:Name="Chevron" Style="{StaticResource Icon}" Data="{StaticResource ChevronDown}" />
+                                        </Button>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                                <Setter TargetName="Chevron" Property="Data" Value="{StaticResource ChevronUp}" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowDetailsTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="10,0,10,12" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisible}}">
+                                    <ItemsControl ItemsSource="{Binding Items}" Focusable="False">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="0,1">
+                                                    <TextBlock DockPanel.Dock="Right" Text="{Binding AmountText}" Margin="12,0,0,0" />
+                                                    <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Style="{StaticResource Hint}" Text="{Binding PayText}"
+                                               Visibility="{Binding HasOwes, Converter={StaticResource BoolToVisible}}" />
+                                    <Button Style="{StaticResource SmallButton}" HorizontalAlignment="Left" Margin="0,6,0,0"
+                                            Content="{l:Tr Report_VoidSale}" Command="{Binding VoidCommand}"
+                                            Visibility="{Binding CanVoid, Converter={StaticResource BoolToVisible}}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGrid.RowDetailsTemplate>
+                    </DataGrid>
+                    <TextBlock Style="{StaticResource EmptyState}" Text="{l:Tr Report_NoSales}"
+                               Visibility="{Binding NoDaySales, Converter={StaticResource BoolToVisible}}" />
+                </Grid>
+            </DockPanel>
+
+            <!-- Weekly: one grey bar per day -->
+            <DockPanel Grid.Column="4" Visibility="{Binding IsWeekly, Converter={StaticResource BoolToVisible}}">
+                <TextBlock DockPanel.Dock="Top" Style="{StaticResource H20}" Text="{l:Tr Report_PerDay}" Margin="0,0,0,8" />
+                <Border Style="{StaticResource WhitePanel}" VerticalAlignment="Top">
+                    <!-- Labels share one width (at least 92) so long Burmese day names fit and the bars still line up. -->
+                    <ItemsControl ItemsSource="{Binding WeekBars}" Focusable="False" Margin="0,4" Grid.IsSharedSizeScope="True">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="48">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="92" SharedSizeGroup="DayLabel" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Label}" Margin="16,0,12,0" VerticalAlignment="Center" />
+                                    <Border Grid.Column="1">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Rectangle Height="24" Fill="{StaticResource Grey500}">
+                                                <Rectangle.Width>
+                                                    <MultiBinding Converter="{StaticResource BarWidth}">
+                                                        <Binding Path="Fraction" />
+                                                        <Binding Path="ActualWidth" RelativeSource="{RelativeSource AncestorType=Border}" />
+                                                    </MultiBinding>
+                                                </Rectangle.Width>
+                                            </Rectangle>
+                                            <TextBlock Text="{Binding AmountText}" Margin="8,0,16,0" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

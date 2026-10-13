@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <!-- All screen text, English. Burmese is in Strings.my.resx with the same keys. -->
+  <data name="App_Title" xml:space="preserve"><value>Store POS</value></data>
+  <data name="Nav_Sales" xml:space="preserve"><value>Sales</value></data>
+  <data name="Nav_Prices" xml:space="preserve"><value>Prices</value></data>
+  <data name="Nav_Debts" xml:space="preserve"><value>Debts</value></data>
+  <data name="Nav_Reports" xml:space="preserve"><value>Reports</value></data>
+  <data name="Nav_Backup" xml:space="preserve"><value>Backup</value></data>
+  <data name="Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Search_ProductPlaceholder" xml:space="preserve"><value>Type part of the name</value></data>
+  <data name="Search_CustomerPlaceholder" xml:space="preserve"><value>Name or village</value></data>
+  <data name="Ks" xml:space="preserve"><value>Ks</value></data>
+  <data name="Fmt_Ks" xml:space="preserve"><value>{0} Ks</value></data>
+  <data name="Voided" xml:space="preserve"><value>VOIDED</value></data>
+  <data name="ChooseDate" xml:space="preserve"><value>Choose a date</value></data>
+  <data name="Dialog_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Dialog_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Error_Title" xml:space="preserve"><value>Something needs attention</value></data>
+  <data name="Status_NoBackupToday" xml:space="preserve"><value>No backup copy yet today. Open Backup.</value></data>
+  <data name="Date_Long" xml:space="preserve"><value>dddd, d MMMM yyyy</value></data>
+  <data name="Date_Day" xml:space="preserve"><value>ddd, d MMM yyyy</value></data>
+  <data name="Date_Short" xml:space="preserve"><value>d MMM yyyy</value></data>
+  <data name="Date_DayMonth" xml:space="preserve"><value>d MMM</value></data>
+  <data name="Date_WeekStart" xml:space="preserve"><value>ddd d MMM</value></data>
+  <data name="Date_WeekEnd" xml:space="preserve"><value>ddd d MMM yyyy</value></data>
+  <data name="Date_WeekdayShort" xml:space="preserve"><value>ddd d</value></data>
+  <data name="Time_Short" xml:space="preserve"><value>h:mm tt</value></data>
+  <data name="Cat_All" xml:space="preserve"><value>All</value></data>
+  <data name="Cat_Pesticide" xml:space="preserve"><value>Pesticide</value></data>
+  <data name="Cat_Herbicide" xml:space="preserve"><value>Herbicide</value></data>
+  <data name="Cat_Fertilizer" xml:space="preserve"><value>Fertilizer</value></data>
+  <data name="Cat_Seed" xml:space="preserve"><value>Seed</value></data>
+  <data name="Cat_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Col_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Col_Unit" xml:space="preserve"><value>Unit</value></data>
+  <data name="Col_PriceKs" xml:space="preserve"><value>Price (Ks)</value></data>
+  <data name="Col_Item" xml:space="preserve"><value>Item</value></data>
+  <data name="Col_Quantity" xml:space="preserve"><value>Quantity</value></data>
+  <data name="Col_UnitPriceKs" xml:space="preserve"><value>Unit price (Ks)</value></data>
+  <data name="Col_AmountKs" xml:space="preserve"><value>Amount (Ks)</value></data>
+  <data name="Col_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Col_Address" xml:space="preserve"><value>Address</value></data>
+  <data name="Col_StillOwesKs" xml:space="preserve"><value>Still owes (Ks)</value></data>
+  <data name="Col_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Col_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Col_OnCreditKs" xml:space="preserve"><value>On credit (Ks)</value></data>
+  <data name="Col_RepaidKs" xml:space="preserve"><value>Repaid (Ks)</value></data>
+  <data name="Col_BalanceKs" xml:space="preserve"><value>Balance (Ks)</value></data>
+  <data name="Col_Product" xml:space="preserve"><value>Product</value></data>
+  <data name="Col_Qty" xml:space="preserve"><value>Qty</value></data>
+  <data name="Col_Ks" xml:space="preserve"><value>Ks</value></data>
+  <data name="Col_Time" xml:space="preserve"><value>Time</value></data>
+  <data name="Col_Customer" xml:space="preserve"><value>Customer</value></data>
+  <data name="Col_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Col_TotalKs" xml:space="preserve"><value>Total (Ks)</value></data>
+  <data name="Col_Items" xml:space="preserve"><value>Items</value></data>
+  <data name="Col_Day" xml:space="preserve"><value>Day</value></data>
+  <data name="Col_Row" xml:space="preserve"><value>Row</value></data>
+  <data name="Col_WhatChanges" xml:space="preserve"><value>What changes</value></data>
+  <data name="Col_WhatIsWrong" xml:space="preserve"><value>What is wrong</value></data>
+  <data name="Col_Copy" xml:space="preserve"><value>Copy made on</value></data>
+  <data name="Col_Size" xml:space="preserve"><value>Size</value></data>
+  <data name="Sales_Products" xml:space="preserve"><value>Products</value></data>
+  <data name="Sales_Selected" xml:space="preserve"><value>Selected:</value></data>
+  <data name="Sales_NothingSelected" xml:space="preserve"><value>none. Click a product in the list.</value></data>
+  <data name="Sales_Quantity" xml:space="preserve"><value>Quantity</value></data>
+  <data name="Sales_AddToCart" xml:space="preserve"><value>Add to cart</value></data>
+  <data name="Sales_HintWhole" xml:space="preserve"><value>Whole numbers only for this product.</value></data>
+  <data name="Sales_HintDecimals" xml:space="preserve"><value>You can type decimals, for example 2.5</value></data>
+  <data name="Sales_Cart" xml:space="preserve"><value>Cart</value></data>
+  <data name="Sales_CartEmpty" xml:space="preserve"><value>The cart is empty. Click a product, type the quantity and press Add to cart.</value></data>
+  <data name="Cart_OneItem" xml:space="preserve"><value>1 item</value></data>
+  <data name="Cart_Items" xml:space="preserve"><value>{0} items</value></data>
+  <data name="Cart_Changed" xml:space="preserve"><value>Changed, list price {0}</value></data>
+  <data name="Cart_QtyFor" xml:space="preserve"><value>Quantity, {0}</value></data>
+  <data name="Cart_PriceFor" xml:space="preserve"><value>Unit price, {0}</value></data>
+  <data name="Sales_Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Sales_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Sales_AmountPaid" xml:space="preserve"><value>Amount paid</value></data>
+  <data name="Sales_Change" xml:space="preserve"><value>Change to give</value></data>
+  <data name="Sales_Owed" xml:space="preserve"><value>Balance owed</value></data>
+  <data name="Sales_Customer" xml:space="preserve"><value>Customer</value></data>
+  <data name="Sales_NoCustomer" xml:space="preserve"><value>No customer (paid in full)</value></data>
+  <data name="Sales_NewCustomer" xml:space="preserve"><value>New customer</value></data>
+  <data name="Sales_CustomerOptional" xml:space="preserve"><value>Optional: the sale is paid in full.</value></data>
+  <data name="Sales_CustomerRequired" xml:space="preserve"><value>Required: part of this sale is unpaid.</value></data>
+  <data name="Sales_ClearCart" xml:space="preserve"><value>Clear cart</value></data>
+  <data name="Sales_Save" xml:space="preserve"><value>Save sale</value></data>
+  <data name="Sales_Saved" xml:space="preserve"><value>Sale {0} saved: {1}</value></data>
+  <data name="Sales_TypePaid" xml:space="preserve"><value>Type the amount paid.</value></data>
+  <data name="Sales_PaidNotNumber" xml:space="preserve"><value>The amount paid must be a whole number of kyat.</value></data>
+  <data name="Sales_ChooseCustomer" xml:space="preserve"><value>Choose a customer: part of this sale is unpaid.</value></data>
+  <data name="Sales_FixQtyWhole" xml:space="preserve"><value>Check the quantity of {0}: whole numbers only.</value></data>
+  <data name="Sales_FixQtyDecimal" xml:space="preserve"><value>Check the quantity of {0}: type a number, for example 2.5</value></data>
+  <data name="Sales_FixPrice" xml:space="preserve"><value>Check the unit price of {0}: whole kyat only.</value></data>
+  <data name="Confirm_ClearTitle" xml:space="preserve"><value>Clear the cart?</value></data>
+  <data name="Confirm_ClearOne" xml:space="preserve"><value>The item will be removed. This sale has not been saved, so nothing is recorded.</value></data>
+  <data name="Confirm_ClearMany" xml:space="preserve"><value>All {0} items will be removed. This sale has not been saved, so nothing is recorded.</value></data>
+  <data name="Confirm_KeepItems" xml:space="preserve"><value>Keep items</value></data>
+  <data name="Prices_Add" xml:space="preserve"><value>Add product</value></data>
+  <data name="Prices_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Prices_Import" xml:space="preserve"><value>Import CSV</value></data>
+  <data name="Prices_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Prices_Showing" xml:space="preserve"><value>Showing {0} of {1} products</value></data>
+  <data name="Prices_Empty" xml:space="preserve"><value>No products match. Check the spelling, or choose All.</value></data>
+  <data name="Prices_UnitWeight" xml:space="preserve"><value>{0} (sold by weight)</value></data>
+  <data name="Prices_NotSold" xml:space="preserve"><value>NOT ON SALE</value></data>
+  <data name="Product_AddTitle" xml:space="preserve"><value>Add product</value></data>
+  <data name="Product_EditTitle" xml:space="preserve"><value>Edit product</value></data>
+  <data name="Product_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Product_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Product_Unit" xml:space="preserve"><value>Unit or pack size</value></data>
+  <data name="Product_UnitPlaceholder" xml:space="preserve"><value>For example bottle, bag, kg</value></data>
+  <data name="Product_Price" xml:space="preserve"><value>Price</value></data>
+  <data name="Product_SoldByWeight" xml:space="preserve"><value>Sold by weight (decimals allowed, for example 2.5 kg)</value></data>
+  <data name="Product_Active" xml:space="preserve"><value>On sale (shown on the Sales screen)</value></data>
+  <data name="Product_Save" xml:space="preserve"><value>Save product</value></data>
+  <data name="Deactivate_Title" xml:space="preserve"><value>Stop selling this product?</value></data>
+  <data name="Deactivate_Text" xml:space="preserve"><value>{0} will disappear from the Sales screen. Past sales and reports keep it.</value></data>
+  <data name="Deactivate_Keep" xml:space="preserve"><value>Keep selling</value></data>
+  <data name="Deactivate_Action" xml:space="preserve"><value>Stop selling</value></data>
+  <data name="Import_Title" xml:space="preserve"><value>Import products from CSV</value></data>
+  <data name="Import_Step1" xml:space="preserve"><value>1. Choose the file</value></data>
+  <data name="Import_Step2" xml:space="preserve"><value>2. Check the rows</value></data>
+  <data name="Import_File" xml:space="preserve"><value>File</value></data>
+  <data name="Import_ChooseFile" xml:space="preserve"><value>Choose file…</value></data>
+  <data name="Import_FileHint" xml:space="preserve"><value>Columns: name, category, unit, price, sold by weight (yes or no). Save the file as “CSV UTF-8” so Burmese names come in correctly.</value></data>
+  <data name="Import_Summary" xml:space="preserve"><value>{0} rows read: {1} new products, {2} price changes, {3} with no change, {4} with errors</value></data>
+  <data name="Import_RowsTitle" xml:space="preserve"><value>Rows to import ({0})</value></data>
+  <data name="Import_ErrorsTitle" xml:space="preserve"><value>Rows with errors ({0})</value></data>
+  <data name="Import_New" xml:space="preserve"><value>New product</value></data>
+  <data name="Import_PriceChange" xml:space="preserve"><value>Price {0} → {1}</value></data>
+  <data name="Import_NoChange" xml:space="preserve"><value>No change</value></data>
+  <data name="Import_UnitWeight" xml:space="preserve"><value>{0} (weight)</value></data>
+  <data name="Import_FooterHint" xml:space="preserve"><value>Rows with errors are not imported. Fix them in the file and import it again.</value></data>
+  <data name="Import_Button" xml:space="preserve"><value>Import {0} rows</value></data>
+  <data name="Csv_Yes" xml:space="preserve"><value>yes</value></data>
+  <data name="Csv_No" xml:space="preserve"><value>no</value></data>
+  <data name="Err_Csv_Unreadable" xml:space="preserve"><value>The file could not be opened: {0}</value></data>
+  <data name="Err_Csv_NotUtf8" xml:space="preserve"><value>The file is not saved as CSV UTF-8, so Burmese names would come in wrong. In Excel choose Save As, pick “CSV UTF-8”, then try again.</value></data>
+  <data name="Err_Csv_Empty" xml:space="preserve"><value>The file has no rows to import.</value></data>
+  <data name="Err_Csv_Columns" xml:space="preserve"><value>This row has {0} columns. It needs 5: name, category, unit, price, sold by weight.</value></data>
+  <data name="Err_Csv_NameEmpty" xml:space="preserve"><value>Name is empty.</value></data>
+  <data name="Err_Csv_Category" xml:space="preserve"><value>Category “{0}” is not allowed. Use Pesticide, Herbicide, Fertilizer, Seed or Other.</value></data>
+  <data name="Err_Csv_UnitEmpty" xml:space="preserve"><value>Unit is empty.</value></data>
+  <data name="Err_Csv_PriceEmpty" xml:space="preserve"><value>Price is empty.</value></data>
+  <data name="Err_Csv_PriceLetterO" xml:space="preserve"><value>Price “{0}” is not a number. A letter O was typed instead of a zero.</value></data>
+  <data name="Err_Csv_PriceNotNumber" xml:space="preserve"><value>Price “{0}” is not a number.</value></data>
+  <data name="Err_Csv_PriceDecimal" xml:space="preserve"><value>Price “{0}” has decimals. Use whole kyat.</value></data>
+  <data name="Err_Csv_Weight" xml:space="preserve"><value>Sold by weight “{0}” must be yes or no.</value></data>
+  <data name="Err_Csv_Duplicate" xml:space="preserve"><value>The same name is already on row {0}.</value></data>
+  <data name="Debts_TotalOwed" xml:space="preserve"><value>Total owed to the store</value></data>
+  <data name="Debts_StillOweCount" xml:space="preserve"><value>Customers who still owe</value></data>
+  <data name="Debts_Show" xml:space="preserve"><value>Show</value></data>
+  <data name="Debts_StillOwes" xml:space="preserve"><value>Still owes</value></data>
+  <data name="Debts_PaidInFull" xml:space="preserve"><value>Paid in full</value></data>
+  <data name="Debts_OneCustomer" xml:space="preserve"><value>1 customer</value></data>
+  <data name="Debts_Customers" xml:space="preserve"><value>{0} customers</value></data>
+  <data name="Debts_Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Debts_OpenFor" xml:space="preserve"><value>Open {0}</value></data>
+  <data name="Debts_Empty" xml:space="preserve"><value>No customers match. Check the spelling.</value></data>
+  <data name="Customer_Back" xml:space="preserve"><value>Back to debt list</value></data>
+  <data name="Customer_Edit" xml:space="preserve"><value>Edit customer</value></data>
+  <data name="Customer_StillOwes" xml:space="preserve"><value>Still owes</value></data>
+  <data name="Customer_RecordRepayment" xml:space="preserve"><value>Record repayment</value></data>
+  <data name="Customer_History" xml:space="preserve"><value>History, newest first</value></data>
+  <data name="Customer_Count" xml:space="preserve"><value>{0} credit sales, {1} repayments</value></data>
+  <data name="Customer_CountReversed" xml:space="preserve"><value>{0} credit sales, {1} repayments ({2} reversed)</value></data>
+  <data name="Customer_Reverse" xml:space="preserve"><value>Reverse…</value></data>
+  <data name="Customer_NewTitle" xml:space="preserve"><value>New customer</value></data>
+  <data name="Customer_EditTitle" xml:space="preserve"><value>Edit customer</value></data>
+  <data name="Customer_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Customer_Address" xml:space="preserve"><value>Address</value></data>
+  <data name="Customer_AddressPlaceholder" xml:space="preserve"><value>Village or street</value></data>
+  <data name="Customer_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Customer_PhoneOptional" xml:space="preserve"><value>Optional</value></data>
+  <data name="Customer_Save" xml:space="preserve"><value>Save customer</value></data>
+  <data name="Ledger_CreditSale" xml:space="preserve"><value>Credit sale {0}: total {1}, paid {2}</value></data>
+  <data name="Ledger_Repayment" xml:space="preserve"><value>Repayment</value></data>
+  <data name="Ledger_RepaymentReversed" xml:space="preserve"><value>Repayment, reversed: {0}</value></data>
+  <data name="Repay_Title" xml:space="preserve"><value>Record repayment</value></data>
+  <data name="Repay_StillOwes" xml:space="preserve"><value>Still owes</value></data>
+  <data name="Repay_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Repay_Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="Repay_After" xml:space="preserve"><value>After this</value></data>
+  <data name="Repay_StillOwed" xml:space="preserve"><value>{0} Ks still owed</value></data>
+  <data name="Repay_PaidInFull" xml:space="preserve"><value>Paid in full</value></data>
+  <data name="Repay_CheckAmount" xml:space="preserve"><value>Check the amount</value></data>
+  <data name="Repay_TooMuch" xml:space="preserve"><value>The amount is more than this customer owes.</value></data>
+  <data name="Repay_Note" xml:space="preserve"><value>The money pays off the oldest sales first.</value></data>
+  <data name="Repay_Save" xml:space="preserve"><value>Save repayment</value></data>
+  <data name="Reverse_Title" xml:space="preserve"><value>Reverse this repayment?</value></data>
+  <data name="Reverse_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Reverse_Customer" xml:space="preserve"><value>Customer</value></data>
+  <data name="Reverse_Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="Reverse_Paragraph" xml:space="preserve"><value>The repayment stays in the history, struck through, and the customer owes this amount again. This cannot be undone. If the amount was wrong, record the right one after reversing.</value></data>
+  <data name="Reverse_Placeholder" xml:space="preserve"><value>For example: entered twice by mistake</value></data>
+  <data name="Reverse_Action" xml:space="preserve"><value>Reverse repayment</value></data>
+  <data name="Reason_Label" xml:space="preserve"><value>Reason (required)</value></data>
+  <data name="Void_Title" xml:space="preserve"><value>Void this sale?</value></data>
+  <data name="Void_Time" xml:space="preserve"><value>Time</value></data>
+  <data name="Void_Customer" xml:space="preserve"><value>Customer</value></data>
+  <data name="Void_Items" xml:space="preserve"><value>Items</value></data>
+  <data name="Void_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Void_Paragraph" xml:space="preserve"><value>The sale stays in the list, marked VOIDED, and is left out of all reports. This cannot be undone. If the sale was wrong, enter it again after voiding.</value></data>
+  <data name="Void_Placeholder" xml:space="preserve"><value>For example: wrong quantity entered</value></data>
+  <data name="Void_Action" xml:space="preserve"><value>Void sale</value></data>
+  <data name="Report_Daily" xml:space="preserve"><value>Daily</value></data>
+  <data name="Report_Weekly" xml:space="preserve"><value>Weekly</value></data>
+  <data name="Report_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Report_Week" xml:space="preserve"><value>Week</value></data>
+  <data name="Report_PrevDay" xml:space="preserve"><value>Previous day</value></data>
+  <data name="Report_NextDay" xml:space="preserve"><value>Next day</value></data>
+  <data name="Report_PrevWeek" xml:space="preserve"><value>Previous week</value></data>
+  <data name="Report_NextWeek" xml:space="preserve"><value>Next week</value></data>
+  <data name="Report_WeekRange" xml:space="preserve"><value>{0} to {1}</value></data>
+  <data name="Report_SaveExcel" xml:space="preserve"><value>Save as Excel</value></data>
+  <data name="Report_SavePdf" xml:space="preserve"><value>Save as PDF</value></data>
+  <data name="Report_TotalSold" xml:space="preserve"><value>Total sold</value></data>
+  <data name="Report_TotalSoldNote" xml:space="preserve"><value>All sales, paid or not</value></data>
+  <data name="Report_Cash" xml:space="preserve"><value>Cash received</value></data>
+  <data name="Report_CashNote" xml:space="preserve"><value>Includes {0} Ks debt repayments</value></data>
+  <data name="Report_Credit" xml:space="preserve"><value>Credit given</value></data>
+  <data name="Report_CreditNote" xml:space="preserve"><value>Unpaid part of {0} sales</value></data>
+  <data name="Report_CreditNoteOne" xml:space="preserve"><value>Unpaid part of 1 sale</value></data>
+  <data name="Report_Count" xml:space="preserve"><value>Number of sales</value></data>
+  <data name="Report_VoidedNone" xml:space="preserve"><value>No voided sales</value></data>
+  <data name="Report_VoidedOne" xml:space="preserve"><value>1 voided sale not counted</value></data>
+  <data name="Report_VoidedMany" xml:space="preserve"><value>{0} voided sales not counted</value></data>
+  <data name="Report_Best" xml:space="preserve"><value>Best sellers (top 10)</value></data>
+  <data name="Report_Slow" xml:space="preserve"><value>Slow sellers</value></data>
+  <data name="Report_SlowNote" xml:space="preserve"><value>Lowest first. Products with no sales are included.</value></data>
+  <data name="Report_SalesOn" xml:space="preserve"><value>Sales on {0}</value></data>
+  <data name="Report_DayCount" xml:space="preserve"><value>{0} sales</value></data>
+  <data name="Report_DayCountVoided" xml:space="preserve"><value>{0} sales, {1} voided</value></data>
+  <data name="Report_NoSales" xml:space="preserve"><value>No sales on this day.</value></data>
+  <data name="Report_WalkIn" xml:space="preserve"><value>Walk-in</value></data>
+  <data name="Report_Owes" xml:space="preserve"><value>Owes {0}</value></data>
+  <data name="Report_PaidOwes" xml:space="preserve"><value>Paid {0}, owes {1}</value></data>
+  <data name="Report_ShowItems" xml:space="preserve"><value>Show items of the sale at {0}</value></data>
+  <data name="Report_HideItems" xml:space="preserve"><value>Hide items of the sale at {0}</value></data>
+  <data name="Report_VoidSale" xml:space="preserve"><value>Void this sale</value></data>
+  <data name="Report_PerDay" xml:space="preserve"><value>Sales per day (Ks)</value></data>
+  <data name="Report_DailyTitle" xml:space="preserve"><value>Daily report</value></data>
+  <data name="Report_WeeklyTitle" xml:space="preserve"><value>Weekly report</value></data>
+  <data name="Export_DoneTitle" xml:space="preserve"><value>Report saved</value></data>
+  <data name="Export_Done" xml:space="preserve"><value>The report was saved to {0}</value></data>
+  <data name="Export_Failed" xml:space="preserve"><value>The report could not be saved: {0}. If the file is open in Excel, close it and try again.</value></data>
+  <data name="Backup_Title" xml:space="preserve"><value>Backup</value></data>
+  <data name="Backup_Folder" xml:space="preserve"><value>Backup folder</value></data>
+  <data name="Backup_ChooseFolder" xml:space="preserve"><value>Choose folder…</value></data>
+  <data name="Backup_FolderHint" xml:space="preserve"><value>Choose a USB drive or another folder. A copy is made automatically once a day while the app is open, and whenever you press Back up now.</value></data>
+  <data name="Backup_Now" xml:space="preserve"><value>Back up now</value></data>
+  <data name="Backup_Last" xml:space="preserve"><value>Last copy: {0}</value></data>
+  <data name="Backup_Never" xml:space="preserve"><value>No copy has been made yet.</value></data>
+  <data name="Backup_Done" xml:space="preserve"><value>Copy saved: {0}</value></data>
+  <data name="Backup_Failed" xml:space="preserve"><value>The copy could not be made: {0}</value></data>
+  <data name="Backup_AutoFailed" xml:space="preserve"><value>Today's automatic copy could not be made: {0}</value></data>
+  <data name="Backup_NoFolder" xml:space="preserve"><value>Choose a backup folder first.</value></data>
+  <data name="Backup_FolderMissing" xml:space="preserve"><value>The backup folder {0} cannot be reached. If it is on a USB drive, plug it in and try again.</value></data>
+  <data name="Backup_SizeKb" xml:space="preserve"><value>{0} KB</value></data>
+  <data name="Restore_Title" xml:space="preserve"><value>Restore from a copy</value></data>
+  <data name="Restore_Hint" xml:space="preserve"><value>Restoring replaces all current data with the copy. A safety copy of the current data is made first.</value></data>
+  <data name="Restore_FromFile" xml:space="preserve"><value>Restore from another file…</value></data>
+  <data name="Restore_This" xml:space="preserve"><value>Restore this copy</value></data>
+  <data name="Restore_None" xml:space="preserve"><value>No copies in the backup folder yet.</value></data>
+  <data name="Restore_ChooseFile" xml:space="preserve"><value>Choose a backup copy</value></data>
+  <data name="Restore_ConfirmTitle" xml:space="preserve"><value>Restore this copy?</value></data>
+  <data name="Restore_ConfirmText" xml:space="preserve"><value>All current data will be replaced with the copy from {0}. A safety copy of the current data is saved first.</value></data>
+  <data name="Restore_Keep" xml:space="preserve"><value>Keep current data</value></data>
+  <data name="Restore_Action" xml:space="preserve"><value>Restore copy</value></data>
+  <data name="Restore_Done" xml:space="preserve"><value>Restored the copy from {0}. The data from before is kept in {1}</value></data>
+  <data name="Restore_Failed" xml:space="preserve"><value>The copy could not be restored: {0}. Nothing was changed.</value></data>
+  <data name="Restore_NotACopy" xml:space="preserve"><value>This file is not a Store POS backup copy.</value></data>
+  <data name="Language_Title" xml:space="preserve"><value>Language</value></data>
+  <data name="Language_Restart" xml:space="preserve"><value>Close and open the app again to change the language.</value></data>
+  <data name="Err_Unexpected" xml:space="preserve"><value>Something went wrong: {0}. Nothing was saved. Try again; if it keeps happening, write down what you did.</value></data>
+  <data name="Err_NameRequired" xml:space="preserve"><value>Type a name.</value></data>
+  <data name="Err_UnitRequired" xml:space="preserve"><value>Type the unit or pack size.</value></data>
+  <data name="Err_PriceInvalid" xml:space="preserve"><value>The price must be a whole number of kyat.</value></data>
+  <data name="Err_NameExists" xml:space="preserve"><value>A product with this name already exists.</value></data>
+  <data name="Err_CustomerExists" xml:space="preserve"><value>A customer with this name and address already exists. Pick them from the list instead.</value></data>
+  <data name="Err_CartEmpty" xml:space="preserve"><value>The cart is empty.</value></data>
+  <data name="Err_QtyInvalid" xml:space="preserve"><value>Check the quantity of {0}.</value></data>
+  <data name="Err_QtyWhole" xml:space="preserve"><value>{0} is sold in whole numbers only.</value></data>
+  <data name="Err_LinePriceInvalid" xml:space="preserve"><value>Check the unit price of {0}.</value></data>
+  <data name="Err_PaidInvalid" xml:space="preserve"><value>The amount paid cannot be less than zero.</value></data>
+  <data name="Err_CustomerRequired" xml:space="preserve"><value>Choose a customer: part of this sale is unpaid.</value></data>
+  <data name="Err_ReasonRequired" xml:space="preserve"><value>Type a reason.</value></data>
+  <data name="Err_SaleNotFound" xml:space="preserve"><value>This sale could not be found.</value></data>
+  <data name="Err_AlreadyVoided" xml:space="preserve"><value>This sale is already voided.</value></data>
+  <data name="Err_RepaidMoreThanOwed" xml:space="preserve"><value>This sale cannot be voided: the customer has already repaid more than they would then owe. Reverse a repayment first.</value></data>
+  <data name="Err_RepaymentNotFound" xml:space="preserve"><value>This repayment could not be found.</value></data>
+  <data name="Err_AlreadyReversed" xml:space="preserve"><value>This repayment is already reversed.</value></data>
+  <data name="Err_AmountInvalid" xml:space="preserve"><value>Type an amount more than zero.</value></data>
+  <data name="Err_DateFuture" xml:space="preserve"><value>The date cannot be in the future.</value></data>
+</root>

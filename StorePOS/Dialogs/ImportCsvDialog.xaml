@@ -1,0 +1,109 @@
+<Window x:Class="StorePOS.Dialogs.ImportCsvDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:StorePOS.Infrastructure"
+        Style="{StaticResource DialogWindow}" Title="{l:Tr App_Title}" Width="1240" Height="640" SizeToContent="Manual">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource H24}" Text="{l:Tr Import_Title}" />
+
+        <!-- 1. Choose the file -->
+        <StackPanel Grid.Row="2">
+            <TextBlock Style="{StaticResource H18}" Text="{l:Tr Import_Step1}" />
+            <DockPanel Margin="0,8,0,0">
+                <TextBlock Style="{StaticResource Label}" Text="{l:Tr Import_File}" MinWidth="48" Margin="0,0,8,0" />
+                <Button DockPanel.Dock="Right" Margin="8,0,0,0" Content="{l:Tr Import_ChooseFile}" Click="Choose_Click" />
+                <TextBox IsReadOnly="True" Text="{Binding FilePath, Mode=OneWay}" AutomationProperties.Name="{l:Tr Import_File}" />
+            </DockPanel>
+            <TextBlock Style="{StaticResource Hint}" Margin="0,4,0,0" Text="{l:Tr Import_FileHint}" />
+            <TextBlock Style="{StaticResource Warning}" Margin="0,4,0,0" Text="{Binding FileError}"
+                       Visibility="{Binding FileError, Converter={StaticResource BoolToVisible}}" />
+        </StackPanel>
+
+        <!-- 2. Check the rows -->
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="8" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource H18}" Text="{l:Tr Import_Step2}" />
+                <TextBlock Grid.Column="1" Style="{StaticResource Hint}" Text="{Binding SummaryText}" Margin="16,0,0,0"
+                           TextAlignment="Right" VerticalAlignment="Center" />
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="352" />
+                </Grid.ColumnDefinitions>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" FontWeight="SemiBold" Text="{Binding RowsTitle}" Margin="0,0,0,8" />
+                    <DataGrid ItemsSource="{Binding Rows}" AutomationProperties.Name="{Binding RowsTitle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{l:Tr Col_Row}" Binding="{Binding Row}" Width="Auto" MinWidth="52" HeaderStyle="{StaticResource NumHeader}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CellNum}">
+                                        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="{l:Tr Col_Name}" Binding="{Binding Name}" Width="*" ElementStyle="{StaticResource CellText}" />
+                            <DataGridTextColumn Header="{l:Tr Col_Category}" Binding="{Binding CategoryName}" Width="108" ElementStyle="{StaticResource CellText}" />
+                            <DataGridTextColumn Header="{l:Tr Col_Unit}" Binding="{Binding UnitText}" Width="112" ElementStyle="{StaticResource CellText}" />
+                            <DataGridTextColumn Header="{l:Tr Col_PriceKs}" Binding="{Binding PriceText}" Width="Auto" MinWidth="96"
+                                                ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                            <DataGridTemplateColumn Header="{l:Tr Col_WhatChanges}" Width="168">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource CellText}" Text="{Binding ChangeText}"
+                                                   FontWeight="{Binding IsChange, Converter={StaticResource BoolToSemiBold}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+                <DockPanel Grid.Column="2">
+                    <TextBlock DockPanel.Dock="Top" FontWeight="SemiBold" Text="{Binding ErrorsTitle}" Margin="0,0,0,8" />
+                    <DataGrid ItemsSource="{Binding Errors}" AutomationProperties.Name="{Binding ErrorsTitle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{l:Tr Col_Row}" Binding="{Binding Row}" Width="Auto" MinWidth="52" HeaderStyle="{StaticResource NumHeader}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource CellNum}">
+                                        <Setter Property="VerticalAlignment" Value="Top" />
+                                        <Setter Property="Margin" Value="10,8" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="{l:Tr Col_WhatIsWrong}" Binding="{Binding Message}" Width="*" ElementStyle="{StaticResource CellText}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Grid>
+        </Grid>
+
+        <!-- Footer -->
+        <DockPanel Grid.Row="6">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="{l:Tr Dialog_Cancel}" IsCancel="True" />
+                <Button Style="{StaticResource PrimaryButton}" MinWidth="180" Margin="8,0,0,0"
+                        Content="{Binding ImportButtonText}" IsEnabled="{Binding CanImport}" Click="Import_Click" />
+            </StackPanel>
+            <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Import_FooterHint}" VerticalAlignment="Center" Margin="0,0,16,0" />
+        </DockPanel>
+    </Grid>
+</Window>
