@@ -4,6 +4,7 @@
         xmlns:l="clr-namespace:StorePOS.Infrastructure"
         xmlns:vm="clr-namespace:StorePOS.ViewModels"
         xmlns:v="clr-namespace:StorePOS.Views"
+        xmlns:c="clr-namespace:StorePOS.Controls"
         Style="{StaticResource AppWindow}"
         Title="{l:Tr App_Title}"
         Width="1366" Height="740" MinWidth="1280" MinHeight="700"
@@ -11,6 +12,8 @@
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:SalesViewModel}"><v:SalesView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:PricesViewModel}"><v:PricesView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StockViewModel}"><v:StockView /></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StockInsViewModel}"><v:StockInsView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:DebtsViewModel}"><v:DebtsView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:CustomerDetailViewModel}"><v:CustomerDetailView /></DataTemplate>
         <DataTemplate DataType="{x:Type vm:ReportsViewModel}"><v:ReportsView /></DataTemplate>
@@ -19,6 +22,7 @@
 
     <Grid x:Name="Root">
         <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
             <RowDefinition Height="*" />
             <RowDefinition Height="32" />
         </Grid.RowDefinitions>
@@ -27,8 +31,10 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <c:ShopHeader Grid.ColumnSpan="2" />
+
         <!-- Sidebar -->
-        <Border Background="{StaticResource Grey200}" BorderBrush="{StaticResource Grey400}" BorderThickness="0,0,1,0">
+        <Border Grid.Row="1" Background="{StaticResource Grey200}" BorderBrush="{StaticResource Grey400}" BorderThickness="0,0,1,0">
             <DockPanel Margin="0,8,0,0" LastChildFill="False">
                 <RadioButton DockPanel.Dock="Top" Style="{StaticResource NavButton}" Content="{l:Tr Nav_Sales}"
                              Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:Section.Sales}"
@@ -36,6 +42,9 @@
                 <RadioButton DockPanel.Dock="Top" Style="{StaticResource NavButton}" Content="{l:Tr Nav_Prices}"
                              Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:Section.Prices}"
                              IsChecked="{Binding Section, Mode=OneWay, Converter={StaticResource Eq}, ConverterParameter=Prices}" />
+                <RadioButton DockPanel.Dock="Top" Style="{StaticResource NavButton}" Content="{l:Tr Nav_Stock}"
+                             Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:Section.Stock}"
+                             IsChecked="{Binding Section, Mode=OneWay, Converter={StaticResource Eq}, ConverterParameter=Stock}" />
                 <RadioButton DockPanel.Dock="Top" Style="{StaticResource NavButton}" Content="{l:Tr Nav_Debts}"
                              Command="{Binding NavigateCommand}" CommandParameter="{x:Static vm:Section.Debts}"
                              IsChecked="{Binding Section, Mode=OneWay, Converter={StaticResource Eq}, ConverterParameter=Debts}" />
@@ -48,10 +57,10 @@
             </DockPanel>
         </Border>
 
-        <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" Focusable="False" />
+        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding CurrentPage}" Focusable="False" />
 
         <!-- Status bar: today's date. A missed backup is shown in bold, not in a new colour. -->
-        <Border Grid.Row="1" Grid.ColumnSpan="2" Background="{StaticResource Grey200}"
+        <Border Grid.Row="2" Grid.ColumnSpan="2" Background="{StaticResource Grey200}"
                 BorderBrush="{StaticResource Grey400}" BorderThickness="0,1,0,0">
             <DockPanel Margin="16,0">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding StatusNote}" FontWeight="SemiBold" VerticalAlignment="Center" />

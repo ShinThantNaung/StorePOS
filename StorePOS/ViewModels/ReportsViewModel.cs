@@ -10,7 +10,7 @@ public sealed class BestRow
     public int Rank { get; init; }
     public required ProductSales Data { get; init; }
     public string Name => Data.Name;
-    public string QtyText => Fmt.QtyWithUnit(Data.Quantity, Data.Unit, Data.SoldByWeight);
+    public string QtyText => Fmt.QtyWithUnit(Data.Quantity, Units.Display(Data.Unit), Data.SoldByWeight);
     public string AmountText => Fmt.Money(Data.Amount);
 }
 

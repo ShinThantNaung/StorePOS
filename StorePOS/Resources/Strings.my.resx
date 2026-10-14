@@ -6,8 +6,10 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <!-- All screen text, Burmese (Unicode, not Zawgyi). Keys match Strings.resx. -->
   <data name="App_Title" xml:space="preserve"><value>ဆိုင် အရောင်းစာရင်း</value></data>
+  <data name="Shop_Name" xml:space="preserve"><value>ရှင်းသန့် - စိုက်ပျိုးရေးစျေးဆိုင်</value></data>
   <data name="Nav_Sales" xml:space="preserve"><value>အရောင်း</value></data>
   <data name="Nav_Prices" xml:space="preserve"><value>ဈေးနှုန်း</value></data>
+  <data name="Nav_Stock" xml:space="preserve"><value>လက်ကျန်</value></data>
   <data name="Nav_Debts" xml:space="preserve"><value>အကြွေး</value></data>
   <data name="Nav_Reports" xml:space="preserve"><value>စာရင်းချုပ်</value></data>
   <data name="Nav_Backup" xml:space="preserve"><value>အရန်သိမ်းခြင်း</value></data>
@@ -124,7 +126,8 @@
   <data name="Product_SizePlaceholder" xml:space="preserve"><value>ဥပမာ 1 လီတာ၊ 500 cc (မထည့်လည်း ရသည်)</value></data>
   <data name="Product_Category" xml:space="preserve"><value>အမျိုးအစား</value></data>
   <data name="Product_Unit" xml:space="preserve"><value>ယူနစ်</value></data>
-  <data name="Product_UnitPlaceholder" xml:space="preserve"><value>ဥပမာ ပုလင်း၊ အိတ်၊ ကီလို</value></data>
+  <data name="Unit_Bottle" xml:space="preserve"><value>ပုလင်း</value></data>
+  <data name="Unit_Bag" xml:space="preserve"><value>အိတ်</value></data>
   <data name="Product_Price" xml:space="preserve"><value>ဈေးနှုန်း</value></data>
   <data name="Product_SoldByWeight" xml:space="preserve"><value>အလေးချိန်ဖြင့်ရောင်း (ဒသမ ရနိုင်၊ ဥပမာ 2.5 ကီလို)</value></data>
   <data name="Product_Active" xml:space="preserve"><value>ရောင်းနေဆဲ (အရောင်းစာမျက်နှာတွင် ပြမည်)</value></data>
@@ -290,7 +293,7 @@
   <data name="Language_Restart" xml:space="preserve"><value>ဘာသာစကား ပြောင်းရန် အက်ပ်ကို ပိတ်ပြီး ပြန်ဖွင့်ပါ။</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>တစ်ခုခု မှားသွားသည် - {0}။ ဘာမျှ မသိမ်းရသေးပါ။ ထပ်ကြိုးစားပါ။ ဆက်ဖြစ်နေလျှင် လုပ်ခဲ့သည်ကို မှတ်ထားပါ။</value></data>
   <data name="Err_NameRequired" xml:space="preserve"><value>အမည် ရိုက်ပါ။</value></data>
-  <data name="Err_UnitRequired" xml:space="preserve"><value>ယူနစ်ကို ရိုက်ပါ။</value></data>
+  <data name="Err_UnitRequired" xml:space="preserve"><value>ယူနစ်ကို ရွေးပါ။</value></data>
   <data name="Err_PriceInvalid" xml:space="preserve"><value>ဈေးနှုန်းသည် ကျပ်ကိန်းပြည့် ဖြစ်ရမည်။</value></data>
   <data name="Err_NameExists" xml:space="preserve"><value>ဤအမည်၊ ကုမ္ပဏီနှင့် အရွယ်အစားဖြင့် ပစ္စည်း ရှိပြီးသား ဖြစ်သည်။</value></data>
   <data name="Err_CustomerExists" xml:space="preserve"><value>ဤအမည်နှင့် လိပ်စာဖြင့် ဝယ်သူ ရှိပြီးသား ဖြစ်သည်။ စာရင်းထဲမှ ရွေးပါ။</value></data>
@@ -308,4 +311,99 @@
   <data name="Err_AlreadyReversed" xml:space="preserve"><value>ဤပြန်ဆပ်ငွေကို ပြန်ရုပ်ပြီးသား ဖြစ်သည်။</value></data>
   <data name="Err_AmountInvalid" xml:space="preserve"><value>သုညထက်ကြီးသော ပမာဏ ရိုက်ပါ။</value></data>
   <data name="Err_DateFuture" xml:space="preserve"><value>ရက်စွဲသည် အနာဂတ် မဖြစ်ရပါ။</value></data>
+  <!-- Stock (Feature 5) -->
+  <data name="Stock_Current" xml:space="preserve"><value>လက်ရှိ လက်ကျန်</value></data>
+  <data name="Stock_InHistory" xml:space="preserve"><value>ပစ္စည်းဝင် မှတ်တမ်း</value></data>
+  <data name="Stock_Adjust" xml:space="preserve"><value>အရေအတွက် ပြင်မည်</value></data>
+  <data name="Stock_RecordIn" xml:space="preserve"><value>ပစ္စည်းဝင် မှတ်မည်</value></data>
+  <data name="Stock_OutOnly" xml:space="preserve"><value>ကုန်နေသည်</value></data>
+  <data name="Stock_Showing" xml:space="preserve"><value>{1} မျိုးအနက် {0} မျိုး ပြထားသည်၊ {2} မျိုး ကုန်နေသည်</value></data>
+  <data name="Stock_Out" xml:space="preserve"><value>ကုန်</value></data>
+  <data name="Stock_NowLabel" xml:space="preserve"><value>ယခု လက်ကျန်</value></data>
+  <data name="Stock_LastInFrom" xml:space="preserve"><value>{1} မှ {0}</value></data>
+  <data name="Stock_LastInNone" xml:space="preserve"><value>ပစ္စည်းဝင် မရှိသေးပါ</value></data>
+  <data name="Stock_Movements" xml:space="preserve"><value>လက်ကျန် အပြောင်းအလဲ (နောက်ဆုံးမှ စ၍)</value></data>
+  <data name="Stock_NoMovements" xml:space="preserve"><value>လက်ကျန် အပြောင်းအလဲ မရှိသေးပါ။ စင်ပေါ်ရှိ အရေအတွက်ကို ထည့်ရန် အရေအတွက် ပြင်မည် ကိုနှိပ်ပါ။</value></data>
+  <data name="Stock_PickProduct" xml:space="preserve"><value>လက်ကျန် အပြောင်းအလဲကို ကြည့်ရန် ပစ္စည်းတစ်ခုကို နှိပ်ပါ။</value></data>
+  <data name="Col_InStock" xml:space="preserve"><value>လက်ကျန်</value></data>
+  <data name="Col_LastStockIn" xml:space="preserve"><value>နောက်ဆုံး ပစ္စည်းဝင်</value></data>
+  <data name="Col_WhatHappened" xml:space="preserve"><value>ဖြစ်ရပ်</value></data>
+  <data name="Col_Change" xml:space="preserve"><value>အပြောင်းအလဲ</value></data>
+  <data name="Col_After" xml:space="preserve"><value>ပြီးနောက်</value></data>
+  <data name="Col_Before" xml:space="preserve"><value>မတိုင်မီ</value></data>
+  <data name="Col_Added" xml:space="preserve"><value>ထည့်သည်</value></data>
+  <data name="Col_From" xml:space="preserve"><value>ပေးသွင်းသူ</value></data>
+  <data name="Col_ProductsReceived" xml:space="preserve"><value>ရရှိသော ပစ္စည်းများ</value></data>
+  <data name="Col_InStockNow" xml:space="preserve"><value>ယခု လက်ကျန်</value></data>
+  <data name="Col_Adding" xml:space="preserve"><value>ထည့်မည်</value></data>
+  <data name="Move_Sale" xml:space="preserve"><value>အရောင်း {0}</value></data>
+  <data name="Move_SaleTo" xml:space="preserve"><value>အရောင်း {0}၊ {1}</value></data>
+  <data name="Move_Void" xml:space="preserve"><value>အရောင်း {0} ပယ်ဖျက်ပြီး၊ လက်ကျန် ပြန်ထည့်သည်</value></data>
+  <data name="Move_StockIn" xml:space="preserve"><value>ပစ္စည်းဝင်</value></data>
+  <data name="Move_StockInFrom" xml:space="preserve"><value>{0} မှ ပစ္စည်းဝင်</value></data>
+  <data name="Move_Adjust" xml:space="preserve"><value>အရေအတွက် ပြင်သည် - {0}</value></data>
+  <data name="Move_AdjustNote" xml:space="preserve"><value>အရေအတွက် ပြင်သည် - {0}၊ {1}</value></data>
+  <data name="Adjust_Reason_Damaged" xml:space="preserve"><value>ပျက်စီး သို့မဟုတ် ယိုစိမ့်</value></data>
+  <data name="Adjust_Reason_CountWrong" xml:space="preserve"><value>အရေအတွက် မှားနေခဲ့သည်</value></data>
+  <data name="Adjust_Reason_Expired" xml:space="preserve"><value>သက်တမ်းကုန်</value></data>
+  <data name="Adjust_Reason_Other" xml:space="preserve"><value>အခြား</value></data>
+  <data name="UnitWord_Bottle_One" xml:space="preserve"><value>ပုလင်း</value></data>
+  <data name="UnitWord_Bottle_Many" xml:space="preserve"><value>ပုလင်း</value></data>
+  <data name="UnitWord_Bag_One" xml:space="preserve"><value>အိတ်</value></data>
+  <data name="UnitWord_Bag_Many" xml:space="preserve"><value>အိတ်</value></data>
+  <data name="StockIns_SearchPlaceholder" xml:space="preserve"><value>ပစ္စည်း သို့မဟုတ် ပေးသွင်းသူ</value></data>
+  <data name="StockIns_CountOne" xml:space="preserve"><value>ပစ္စည်းဝင် 1 ကြိမ်</value></data>
+  <data name="StockIns_Count" xml:space="preserve"><value>ပစ္စည်းဝင် {0} ကြိမ်</value></data>
+  <data name="StockIns_Empty" xml:space="preserve"><value>ကိုက်ညီသော ပစ္စည်းဝင် မရှိပါ။ စာလုံးပေါင်းကို စစ်ပါ။</value></data>
+  <data name="StockIns_None" xml:space="preserve"><value>ပစ္စည်းဝင် မရှိသေးပါ။ ပစ္စည်း ရောက်လာလျှင် ပစ္စည်းဝင် မှတ်မည် ကိုနှိပ်ပါ။</value></data>
+  <data name="StockIns_OneProduct" xml:space="preserve"><value>ပစ္စည်း 1 မျိုး - {0}</value></data>
+  <data name="StockIns_Products" xml:space="preserve"><value>ပစ္စည်း {0} မျိုး - {1}</value></data>
+  <data name="StockIns_NotGiven" xml:space="preserve"><value>မဖော်ပြပါ</value></data>
+  <data name="StockIns_Show" xml:space="preserve"><value>{0} ပစ္စည်းဝင်၏ ပစ္စည်းများကို ပြရန်</value></data>
+  <data name="StockIns_Hide" xml:space="preserve"><value>{0} ပစ္စည်းဝင်၏ ပစ္စည်းများကို ဖျောက်ရန်</value></data>
+  <data name="StockIn_From" xml:space="preserve"><value>ပေးသွင်းသူ</value></data>
+  <data name="StockIn_Note" xml:space="preserve"><value>မှတ်ချက်</value></data>
+  <data name="StockIn_NotePlaceholder" xml:space="preserve"><value>မထည့်လည်း ရသည်၊ ဥပမာ ငွေတောင်းခံလွှာ နံပါတ်</value></data>
+  <data name="StockIn_Add" xml:space="preserve"><value>ထည့်မည်</value></data>
+  <data name="StockIn_Hint" xml:space="preserve"><value>အိတ်၊ ပုလင်း၊ ထုပ် - ကိန်းပြည့်သာ။ ကီလိုဖြင့် ရောင်းသော ပစ္စည်း - ဒသမ ရိုက်နိုင်သည်၊ ဥပမာ 25.5</value></data>
+  <data name="StockIn_Empty" xml:space="preserve"><value>ပစ္စည်းကို ရှာ၍ အရေအတွက် ရိုက်ပြီး ထည့်မည် ကိုနှိပ်ပါ။</value></data>
+  <data name="StockIn_FooterOne" xml:space="preserve"><value>ပစ္စည်း 1 မျိုး။ သိမ်းသည်နှင့် လက်ကျန် တိုးပါမည်။</value></data>
+  <data name="StockIn_Footer" xml:space="preserve"><value>ပစ္စည်း {0} မျိုး။ သိမ်းသည်နှင့် လက်ကျန် တိုးပါမည်။</value></data>
+  <data name="StockIn_Save" xml:space="preserve"><value>ပစ္စည်းဝင် သိမ်းမည်</value></data>
+  <data name="StockIn_AddingFor" xml:space="preserve"><value>{0} ထည့်မည့် အရေအတွက်</value></data>
+  <data name="StockIn_RemoveFor" xml:space="preserve"><value>{0} ကို ဖယ်မည်</value></data>
+  <data name="StockIn_PickFirst" xml:space="preserve"><value>စာရင်းမှ ပစ္စည်းကို အရင် ရွေးပါ။</value></data>
+  <data name="Adjust_Title" xml:space="preserve"><value>လက်ကျန် အရေအတွက် ပြင်ရန်</value></data>
+  <data name="Adjust_Subtitle" xml:space="preserve"><value>စင်ပေါ်ရှိ အရေအတွက်နှင့် အက်ပ်ရှိ အရေအတွက် မကိုက်ညီသောအခါ သုံးပါ။</value></data>
+  <data name="Adjust_AppSays" xml:space="preserve"><value>အက်ပ်တွင်</value></data>
+  <data name="Adjust_Counted" xml:space="preserve"><value>စင်ပေါ်တွင် ရေတွက်ရ</value></data>
+  <data name="Adjust_Difference" xml:space="preserve"><value>ကွာခြားချက်</value></data>
+  <data name="Adjust_NoChange" xml:space="preserve"><value>မပြောင်းလဲပါ</value></data>
+  <data name="Adjust_TypeCount" xml:space="preserve"><value>ရေတွက်ရသော အရေအတွက်ကို ရိုက်ပါ</value></data>
+  <data name="Adjust_Reason" xml:space="preserve"><value>အကြောင်းရင်း</value></data>
+  <data name="Adjust_NotePlaceholder" xml:space="preserve"><value>မထည့်လည်း ရသည်</value></data>
+  <data name="Adjust_Hint" xml:space="preserve"><value>အရေအတွက် အဟောင်းသည် လက်ကျန်မှတ်တမ်းတွင် ကျန်ရှိမည်။ ဘာမှ မဖျက်ပါ။</value></data>
+  <data name="Adjust_Save" xml:space="preserve"><value>အရေအတွက် သိမ်းမည်</value></data>
+  <data name="Picker_NoMatch" xml:space="preserve"><value>ကိုက်ညီသော ပစ္စည်း မရှိပါ။</value></data>
+  <data name="Err_StockIn_Empty" xml:space="preserve"><value>ပစ္စည်း အနည်းဆုံး တစ်မျိုး ထည့်ပါ။</value></data>
+  <data name="Err_StockQtyWhole" xml:space="preserve"><value>{0} ကို ကိန်းပြည့်ဖြင့်သာ ရေတွက်သည်။</value></data>
+  <data name="Err_ProductNotFound" xml:space="preserve"><value>ဤပစ္စည်းကို ရှာမတွေ့ပါ။</value></data>
+  <data name="Err_Adjust_NoChange" xml:space="preserve"><value>အက်ပ်ရှိ အရေအတွက်နှင့် တူနေသည်။ သိမ်းစရာ မရှိပါ။</value></data>
+  <!-- Price history (PR8, PR9) -->
+  <data name="Prices_History" xml:space="preserve"><value>ဈေးနှုန်း မှတ်တမ်း</value></data>
+  <data name="Col_PriceChanged" xml:space="preserve"><value>ဈေး ပြောင်းသည့်နေ့</value></data>
+  <data name="Col_HowChanged" xml:space="preserve"><value>ပြောင်းလဲပုံ</value></data>
+  <data name="PriceHistory_SoldBy" xml:space="preserve"><value>{0}၊ {1}ဖြင့် ရောင်းသည်</value></data>
+  <data name="PriceHistory_SoldByWeight" xml:space="preserve"><value>{0}၊ အလေးချိန် ({1}) ဖြင့် ရောင်းသည်</value></data>
+  <data name="PriceHistory_Now" xml:space="preserve"><value>ယခု ဈေးနှုန်း</value></data>
+  <data name="PriceHistory_Since" xml:space="preserve"><value>{0} မှ စ၍</value></data>
+  <data name="PriceHistory_FirstPrice" xml:space="preserve"><value>ပထမ ဈေးနှုန်း</value></data>
+  <data name="PriceHistory_Added" xml:space="preserve"><value>ပစ္စည်းအသစ် ထည့်စဉ်</value></data>
+  <data name="PriceHistory_Edited" xml:space="preserve"><value>ပစ္စည်း ပြင်စဉ် ပြောင်းသည်</value></data>
+  <data name="PriceHistory_CsvAdded" xml:space="preserve"><value>CSV ဖိုင်မှ ထည့်သည်၊ {0}</value></data>
+  <data name="PriceHistory_CsvAddedNoFile" xml:space="preserve"><value>CSV ဖိုင်မှ ထည့်သည်</value></data>
+  <data name="PriceHistory_Csv" xml:space="preserve"><value>CSV ဖိုင်မှ ပြောင်းသည်၊ {0}</value></data>
+  <data name="PriceHistory_CsvNoFile" xml:space="preserve"><value>CSV ဖိုင်မှ ပြောင်းသည်</value></data>
+  <data name="PriceHistory_Note" xml:space="preserve"><value>ယခင် အရောင်းများသည် ရောင်းခဲ့သည့် ဈေးနှုန်းအတိုင်း ရှိနေမည်။ အရောင်းတစ်ခုအတွက်သာ ပြောင်းထားသော ဈေးနှုန်းကို ဤနေရာတွင် မပြပါ။</value></data>
+  <data name="PriceHistory_Empty" xml:space="preserve"><value>ဤပစ္စည်းအတွက် ဈေးနှုန်း ပြောင်းလဲမှု မှတ်တမ်း မရှိသေးပါ။</value></data>
 </root>

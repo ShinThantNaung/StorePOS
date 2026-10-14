@@ -47,6 +47,12 @@ public sealed class SaleService(Db db, Func<DateTime> clock)
                 ("$s", saleId), ("$p", l.ProductId), ("$n", l.Name), ("$u", l.Unit),
                 ("$w", l.SoldByWeight ? 1 : 0), ("$q", Fmt.ToMilli(l.Quantity)),
                 ("$up", l.UnitPrice), ("$lp", l.ListPrice), ("$lt", l.LineTotal));
+            // ST5/ST8: stock goes down even below zero; the shelf may be right and the app wrong.
+            s.Exec("""
+                INSERT INTO stock_movements(product_id, moved_at, change_milli, kind, sale_id)
+                VALUES($p, $t, $q, 'sale', $s)
+                """,
+                ("$p", l.ProductId), ("$t", Fmt.DbTime(now)), ("$q", -Fmt.ToMilli(l.Quantity)), ("$s", saleId));
         }
 
         if (owed > 0)
@@ -71,8 +77,18 @@ public sealed class SaleService(Db db, Func<DateTime> clock)
         if (status == null) throw new DomainException(Loc.Get("Err_SaleNotFound"));
         if (status == "voided") throw new DomainException(Loc.Get("Err_AlreadyVoided"));
 
+        var now = Fmt.DbTime(clock());
         s.Exec("UPDATE sales SET status='voided', void_reason=$r, voided_at=$t WHERE id=$id",
-            ("$r", reason), ("$t", Fmt.DbTime(clock())), ("$id", saleId));
+            ("$r", reason), ("$t", now), ("$id", saleId));
+
+        // ST5: the items go back into stock. Only what the sale took out is returned, so a sale
+        // saved before stock was tracked does not add stock that was never subtracted.
+        s.Exec("""
+            INSERT INTO stock_movements(product_id, moved_at, change_milli, kind, sale_id)
+            SELECT product_id, $t, -change_milli, 'void', sale_id
+            FROM stock_movements WHERE sale_id = $id AND kind = 'sale'
+            """,
+            ("$t", now), ("$id", saleId));
 
         var debtCustomer = s.Scalar<long?>("SELECT customer_id FROM debts WHERE sale_id = $id", ("$id", saleId));
         if (debtCustomer != null) DebtService.Reallocate(s, debtCustomer.Value);

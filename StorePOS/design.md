@@ -72,6 +72,7 @@ Spacing scale: 4, 8, 12, 16, 24.
 
 | Element | Size |
 | --- | --- |
+| Header | 48 tall, shop name inset 20 |
 | Sidebar | 176 wide, items 56 tall, text inset 20 |
 | Status bar | 32 tall, text inset 16, shows today's date |
 | Button | 44 tall, min width 96, padding 0 20 |
@@ -100,11 +101,14 @@ Spacing scale: 4, 8, 12, 16, 24.
 ## 6. Shell (on every main screen)
 
 ```
++-----------------------------------------------------+
+| Header 48: Shin Thant - Pesticide and Herbicide ... |
 +---------+-------------------------------------------+
 | Sidebar | Content (padding 16)                      |
 | 176     |                                           |
 | Sales   |                                           |
 | Prices  |                                           |
+| Stock   |                                           |
 | Debts   |                                           |
 | Reports |                                           |
 +---------+-------------------------------------------+
@@ -112,9 +116,10 @@ Spacing scale: 4, 8, 12, 16, 24.
 +-----------------------------------------------------+
 ```
 
-- Grid rows: content `*`, status bar `32`. Grid columns: sidebar `176`, content `*`.
-- Sidebar: `Grey200` background, 1 px `Grey400` right border, 8 top padding. Four items, 56 tall, size 18 semibold. The current item has the `Accent` fill and white text. Hover `Grey300`.
-- Customer detail counts as part of Debts, so Debts stays marked.
+- Grid rows: header `48`, content `*`, status bar `32`. Grid columns: sidebar `176`, content `*`.
+- Header (`Controls/ShopHeader`): the shop name, "Shin Thant - Pesticide and Herbicide Store" / "ရှင်းသန့် - စိုက်ပျိုးရေးစျေးဆိုင်", size 20 semibold, text inset 20 (in line with the sidebar text). `Grey200` background, 1 px `Grey400` bottom border. Spans both columns. No accent colour, and no ellipsis.
+- Sidebar: `Grey200` background, 1 px `Grey400` right border, 8 top padding. Five items in this order: Sales, Prices, Stock, Debts, Reports. Each is 56 tall, size 18 semibold. The current item has the `Accent` fill and white text. Hover `Grey300`.
+- Customer detail counts as part of Debts, and Stock-in history counts as part of Stock, so the parent item stays marked.
 
 ## 7. Screens
 
@@ -125,8 +130,7 @@ Two panels side by side: Products (456 wide), gap 16, Cart (`*`).
 **Products panel (left)**
 - Heading "Products" (20 semibold).
 - Row: label "Search" + text box (placeholder "Type part of the name"), filters the list as the user types.
-- Row below it: label "Company" + text box (matches any part of the company), then label "Size" + dropdown (`128`) with "All" and each size on sale. The labels share a column so both boxes start at the same x. All three filters combine.
-- Product table: Name `*` | Unit `84` | Price (Ks) `100`. The name cell shows the name and size ("Glyphosate 1 L"), with the company on a second line in `TextSecondary`. Clicking a row selects it (`AccentTint`).
+- Product table: Name `*` | Unit `84` | Price (Ks) `100`. Clicking a row selects it (`AccentTint`).
 - Under the table, a white 1 px panel with 12 padding: "Selected: <name>", then a row with label "Quantity", number box (88 wide, right-aligned, default 1), the unit text, and an "Add to cart" button on the right. Hint line "Whole numbers only for this product." For weight products the hint becomes "You can type decimals, for example 2.5" and the quantity box accepts decimals.
 - Double-click on a product row also adds it with quantity 1.
 
@@ -149,26 +153,51 @@ Saving a sale stores date, time, items, prices, total and amount paid in one SQL
 
 ### 7.2 Prices
 
-- Toolbar row 1: label "Search" + text box (360 wide, placeholder "Type part of the name"). On the right: "Add product", "Edit", "Import CSV" (opens 7.3).
-- Toolbar row 2: label "Company" + text box (360 wide, placeholder "Type part of the company name"), then label "Size" + dropdown (`160`) with "All" and each size in the list. On the right, "Showing N of M products" in `TextSecondary`.
-- Toolbar row 3: label "Category" + toggle buttons All, Pesticide, Herbicide, Fertilizer, Seed, Other.
-- The three toolbar labels share one column, so the boxes line up.
-- Table: Name `*` | Company `180` | Size `120` | Category `160` | Unit `200` | Price (Ks) `140`. Name, Company, Category and Price headers are sortable buttons. Click again to reverse. Rows are selectable (`AccentTint`). Weight products show the unit as "kg (sold by weight)".
+- Toolbar row 1: label "Search" + text box (360 wide, placeholder "Type part of the name"). On the right: "Add product", "Edit", "Price history" (opens 7.3b for the selected row), "Import CSV" (opens 7.3).
+- Toolbar row 2: label "Category" + toggle buttons All, Pesticide, Herbicide, Fertilizer, Seed, Other. On the right, "Showing N of M products" in `TextSecondary`.
+- Table: Name `*` | Category `180` | Unit `200` | Price (Ks) `140` | Price changed `150` (date of the last price change, "9 Oct 2026"). Name, Category, Price and Price changed headers are sortable buttons. Click again to reverse. Rows are selectable (`AccentTint`). Weight products show the unit as "kg (sold by weight)".
 - Empty state: "No products match. Check the spelling, or choose All."
-- Search is case-insensitive, matches any part of the name, and combines with the company, size and category filters. The company box also matches any part. Size matches the whole size, ignoring spaces and capitals, so "1 L" and "1l" are one entry.
+- Search is case-insensitive, matches any part of the name, and combines with the category filter.
 - "Edit" acts on the selected row. Deactivating is done in the edit dialog (not designed yet).
 
 ### 7.3 Import CSV dialog (1240 × 640)
 
 Title "Import products from CSV" (24 semibold). Three stacked blocks with 20 gap:
 
-1. "1. Choose the file" (18 semibold): label "File", text box with the path, "Choose file…" button. Hint under: "Columns: name, category, unit, price, sold by weight (yes or no), company, size. Company and size can be left empty. Save the file as 'CSV UTF-8' so Burmese names come in correctly."
+1. "1. Choose the file" (18 semibold): label "File", text box with the path, "Choose file…" button. Hint under: "Columns: name, category, unit, price, sold by weight (yes or no). Save the file as 'CSV UTF-8' so Burmese names come in correctly."
 2. "2. Check the rows" (18 semibold), with a summary on the right: "52 rows read: 9 new products, 31 price changes, 9 with no change, 3 with errors". Below it two tables side by side (`*` | `352`):
    - Left, "Rows to import (49)": Row `52` | Name `*` | Category `108` | Unit `112` | Price (Ks) `96` | What changes `168`. The last column reads "New product", "Price 15,000 → 16,000" (semibold) or "No change" (regular).
    - Right, "Rows with errors (3)": Row `52` | What is wrong `*`. Plain-language messages, for example "Price '12,5OO' is not a number. A letter O was typed instead of a zero."
 3. Footer: hint "Rows with errors are not imported. Fix them in the file and import it again." Then "Cancel" and the primary button "Import 49 rows" (min 180). The count is live.
 
-Import adds new products and updates the price of existing ones (match on name, company and size). The Name column shows "Glyphosate 1 L (Green Valley)". Rows that cannot be read are listed, never skipped silently.
+Import adds new products and updates the price of existing ones (match on name). Rows that cannot be read are listed, never skipped silently. Every new product and every price that changes is written to the price history with the import date, time and file name.
+
+### 7.3b Price history dialog (640 × 580)
+
+Every price change is recorded with its date and time, and nothing in the history is ever edited or deleted.
+
+- Title "Price history" (24 semibold), then the product name (20 semibold) and "Herbicide, sold by the bottle" in `TextSecondary`.
+- White panel (10 × 16 padding): "Price now" with the price (28 semibold, "Ks"), and on the right "since 9 Oct 2026, 8:05 AM".
+- Table, newest first: Date `176` ("9 Oct 2026, 8:05 AM") | Price (Ks) `104` (semibold) | Change `104` ("+1,000", "−500", or "First price") | How it changed `*` ("Changed in Edit product", "CSV import, prices-aug-2026.csv", "Added by CSV import, …").
+- Note: "Past sales keep the price they were sold at. A price changed for one sale only is not listed here."
+- One button, "Close" (min 120).
+
+When a price changes:
+
+| Source | Recorded as |
+| --- | --- |
+| Product added (Add product or CSV import) | First price |
+| Price edited in the Edit product dialog | Changed in Edit product |
+| Price updated by CSV import | CSV import, with the file name |
+| Price changed on one cart line at the Sales screen | Not a price change. Stored only in that sale's line. |
+
+Suggested table:
+
+| Table | Key fields | Purpose |
+| --- | --- | --- |
+| price_changes | product, date and time, old price (empty for the first price), new price, source (added, edited, csv_import), file name | One row per price change. The product's current price and "Price changed" date come from its newest row. |
+
+Write the price change row in the same SQLite transaction as the product update.
 
 ### 7.4 Debts
 
@@ -226,6 +255,61 @@ Import adds new products and updates the price of existing ones (match on name, 
 - Buttons bottom right: the safe choice first and focused by default ("Keep items"), then the primary destructive action named for what it does ("Clear cart"). Never "OK" or "Yes".
 - Same pattern for reversing a repayment (also asks for a reason) and deactivating a product.
 
+### 7.7 Stock
+
+Stock is counted per product in the product's own unit (bottles, bags, packs, kg). Every change is a row in a stock movement log, and the number in stock is always the sum of that log, never a typed-in figure.
+
+**What changes stock**
+
+| Event | Change | Recorded automatically? |
+| --- | --- | --- |
+| Sale saved | minus the quantity of each line | Yes, in the same transaction as the sale |
+| Sale voided | plus the quantity back | Yes, when the void is saved |
+| Stock in recorded | plus the quantity of each line | Yes, from the Record stock in dialog |
+| Count adjusted | plus or minus the difference | Yes, from the Adjust stock count dialog |
+
+A sale is still allowed when stock would go below zero (the shelf may be right and the app wrong). The product then shows "OUT" and a negative number until someone records a stock in or adjusts the count.
+
+**Current stock view** (sidebar item Stock)
+- Toolbar row 1: joined toggle "Current stock" (selected) / "Stock-in history" (min 150 each). On the right: "Adjust count" (default) and "Record stock in" (primary, 48 tall, min 200).
+- Toolbar row 2: label "Search" + text box (300), label "Category" + dropdown (190: All, Pesticide, Herbicide, Fertilizer, Seed, Other), label "Show" + toggles "All" / "Out of stock", and on the right "Showing N of M, K out of stock".
+- Below, two panels: stock table `*` | gap 16 | history panel `540`.
+- Stock table: Product `*` | Unit `76` | In stock `120` (right, semibold) | Last stock in `128` (date). A product at zero or below shows an "OUT" tag (1 px `Text` border, radius 2, semibold) before the number. Clicking a row selects it (`AccentTint`) and fills the history panel.
+- History panel:
+  - White header panel (12 × 16 padding): product name (20 semibold), then two columns: "In stock now" with the number and unit (28 semibold), and "Last stock in" with the date and time (semibold) and "+36 from Shwe Pyi Trading".
+  - Heading "Stock movements, newest first" (18 semibold).
+  - Table: Date `150` ("13 Oct, 11:20 AM") | What happened `*` | Change `76` (+36 / −2) | After `76` (semibold). Examples of "What happened": "Sale #0412, U Aung Myint", "Sale #0395 voided, stock returned", "Count adjusted: 1 bottle leaking", "Stock in from Shwe Pyi Trading". Stock-in rows are semibold.
+- Empty state: "No products match. Check the spelling, or choose All."
+
+**Stock-in history view**
+- Same toolbar row 1 with "Stock-in history" selected; only "Record stock in" on the right.
+- Row 2: label "Search" + text box (360, placeholder "Product or supplier"), count on the right ("7 stock-ins").
+- Table, newest first: Date `170` (date semibold, time on a second line in `TextSecondary`) | From `260` (supplier, with the note such as "Invoice SP-1189" on a second line) | Products received `*` ("5 products: Glyphosate herbicide 1 L × 36, …") | expand `56`.
+- Expanding a row (`AccentTint`) shows a small table under the Products column: Product `*` | Added `96` (+36, semibold) | Before `96` | After `96`.
+
+**Record stock in dialog (960 × 640)**
+- Title "Record stock in" (24 semibold).
+- Form grid (`112` | `300` | `112` | `*`, row gap 12): Date (date box + calendar button) and From (editable dropdown of earlier suppliers, plus "Not given") on one row; Note (optional, full width, placeholder "Optional, for example the invoice number") on the next.
+- White add panel (12 padding): label "Product" + search box (fills), label "Quantity" + number box (100), "Add" button. Hint under: "Bags, bottles and packs: whole numbers. Products sold by kg: decimals allowed, for example 25.5."
+- Lines table: Product `*` | Unit `84` | In stock now `120` | Adding `132` (editable 36 tall box, semibold) | After `100` (semibold, live) | Remove `92`.
+- Footer: "N products. Stock goes up as soon as you save." on the left; "Cancel" and primary "Save stock in" (min 180) on the right.
+- One stock in = one delivery = many lines. Saved in one SQLite transaction with the date and time chosen.
+
+**Adjust stock count dialog (560 × 520)**
+- Title "Adjust stock count" (24 semibold), subtitle "Use this when the shelf count does not match the app."
+- Form grid (`150` | `*`, row gap 12): Product (dropdown with search), "App says" (20 semibold, number and unit), "Counted on shelf" (number box 120, size 20 semibold, + unit), "Difference" (semibold, live: "−2 bottles", "No change"), Reason (dropdown: Damaged or leaking, Count was wrong, Expired, Other), Note (optional).
+- Hint: "The old number stays in the stock history. Nothing is deleted."
+- Buttons: "Cancel", primary "Save count" (min 160).
+- Also used for the first-time setup: count every product once and save each count.
+
+**Suggested tables**
+
+| Table | Key fields | Purpose |
+| --- | --- | --- |
+| stock_ins | date and time, supplier (text, optional), note | One row per delivery |
+| stock_in_items | stock_in, product, quantity | Lines of each delivery |
+| stock_movements | product, date and time, change (decimal, + or −), kind (sale, void, stock_in, adjustment), link to the sale, stock_in or adjustment, reason | Every change to stock. Current stock = SUM(change) per product. |
+
 ## 8. Navigation and behaviour summary
 
 | From | Action | To |
@@ -233,11 +317,15 @@ Import adds new products and updates the price of existing ones (match on name, 
 | Sidebar | Click item | That screen. The current item is marked. |
 | Sales | Clear cart | Confirm dialog |
 | Prices | Import CSV | Import CSV dialog |
+| Prices | Price history (selected row) | Price history dialog |
 | Debts list | Open (row) | Customer detail |
 | Customer detail | Record repayment | Record repayment dialog |
 | Customer detail | Back to debt list | Debts list |
 | Reports | Daily / Weekly | Switch the report type |
 | Reports (daily) | Expand a sale, then Void this sale | Void sale dialog |
+| Stock | Current stock / Stock-in history | Switch the view |
+| Stock | Record stock in | Record stock in dialog |
+| Stock | Adjust count | Adjust stock count dialog |
 
 ## 9. Burmese checklist
 
@@ -250,15 +338,15 @@ Import adds new products and updates the price of existing ones (match on name, 
 
 ## 10. Not designed yet
 
-- Add / Edit product dialog (name, company, size, category, unit, price, sold by weight, active). Company and size are optional. Two products may share a name if their company or size differs. Sales and reports name a product as "name size (company)".
+- Add / Edit product dialog (name, category, unit, price, sold by weight, active). Unit is a dropdown, never free text, with only "Bottle" (ပုလင်း) and "Bag" (အိတ်); a new product starts on Bottle. The unit is stored as the code `bottle` or `bag` and shown in the interface language everywhere (Sales, cart, Prices, Stock, CSV preview, reports). A product saved earlier with another typed unit keeps showing that unit; editing it asks for Bottle or Bag.
 - New customer dialog (name, address, optional phone).
 - Backup and restore screen (daily backup folder, "Back up now", "Restore from copy").
-- Reverse repayment dialog (can reuse the Void sale dialog pattern).
+- Reverse repayment dialog (can reuse the Void sale dialog pattern).- Stock shown on the Sales screen (an "In stock" column in the product list, and a warning when a sale takes stock below zero).
 
 ## 11. Suggested WPF structure
 
 - `Themes/Theme.xaml`: colour brushes, font sizes, and implicit styles for `Button`, `TextBox`, `ComboBox`, `DataGrid`, `RadioButton`/`ToggleButton`. Style keys: `PrimaryButton`, `ToggleFilterButton`, `SortHeaderButton`, `MoneyTextBox`.
-- `Views/`: `SalesView`, `PricesView`, `DebtsView`, `CustomerDetailView`, `ReportsView`. `Dialogs/`: `ImportCsvDialog`, `RepaymentDialog`, `VoidSaleDialog`, `ConfirmDialog`.
+- `Views/`: `SalesView`, `PricesView`, `StockView`, `StockInHistoryView`, `DebtsView`, `CustomerDetailView`, `ReportsView`. `Dialogs/`: `ImportCsvDialog`, `PriceHistoryDialog`, `RecordStockInDialog`, `AdjustStockDialog`, `RepaymentDialog`, `VoidSaleDialog`, `ConfirmDialog`.
 - `MainWindow`: sidebar `ListBox` or radio buttons bound to the current view, content `ContentControl`, status bar `StatusBar` bound to today's date. Window `MinWidth=1280`, `MinHeight=700`, start maximized.
 - Use `DataGrid` with `CanUserAddRows=False`, `HeadersVisibility=Column`, `GridLinesVisibility=Horizontal`, `AlternationCount=2`, `RowHeight=40`.
 - MVVM with plain `INotifyPropertyChanged`. Money is `long` or `decimal` in whole kyat; quantity is `decimal`.

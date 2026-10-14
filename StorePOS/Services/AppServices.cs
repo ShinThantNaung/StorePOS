@@ -11,11 +11,12 @@ public sealed class AppServices
         Settings = settings;
         Clock = clock;
         Db = new Db(Path.Combine(dataFolder, "store.db"));
-        Products = new ProductService(Db);
+        Products = new ProductService(Db, clock);
         Sales = new SaleService(Db, clock);
         Debts = new DebtService(Db, clock);
         Reports = new ReportService(Db);
-        Import = new CsvImportService(Db, Products);
+        Import = new CsvImportService(Db, Products, clock);
+        Stock = new StockService(Db, Products, clock);
         Backup = new BackupService(Db, settings, SettingsPath(dataFolder), Path.Combine(dataFolder, "SafetyCopies"), clock);
     }
 
@@ -30,6 +31,7 @@ public sealed class AppServices
     public DebtService Debts { get; }
     public ReportService Reports { get; }
     public CsvImportService Import { get; }
+    public StockService Stock { get; }
     public BackupService Backup { get; }
 
     public DateTime Today => Clock().Date;

@@ -25,12 +25,14 @@ public sealed class PricesViewModel : ObservableObject, IPage
         View.SortDescriptions.Add(new SortDescription(nameof(ProductRow.Name), ListSortDirection.Ascending));
         AddCommand = new RelayCommand(Add);
         EditCommand = new RelayCommand(Edit, () => Selected != null);
+        HistoryCommand = new RelayCommand(() => Dialogs.Dialogs.PriceHistory(Selected!.Product), () => Selected != null);
         ImportCommand = new RelayCommand(Import);
     }
 
     public ListCollectionView View { get; }
     public RelayCommand AddCommand { get; }
     public RelayCommand EditCommand { get; }
+    public RelayCommand HistoryCommand { get; }
     public RelayCommand ImportCommand { get; }
 
     public void Activate() => Reload(Selected?.Id);

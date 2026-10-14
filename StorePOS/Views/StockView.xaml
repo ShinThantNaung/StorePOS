@@ -1,0 +1,180 @@
+<UserControl x:Class="StorePOS.Views.StockView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:StorePOS.Infrastructure">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Current stock / Stock-in history, then the two stock actions -->
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="{l:Tr Stock_Adjust}" Command="{Binding AdjustCommand}" />
+                <Button Style="{StaticResource LargePrimaryButton}" Margin="8,0,0,0"
+                        Content="{l:Tr Stock_RecordIn}" Command="{Binding RecordInCommand}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton Style="{StaticResource ToggleFilterButton}" MinWidth="150" l:Ui.CornerRadius="2,0,0,2"
+                             Content="{l:Tr Stock_Current}" IsChecked="True" />
+                <RadioButton Style="{StaticResource ToggleFilterButton}" MinWidth="150" l:Ui.CornerRadius="0,2,2,0" Margin="-1,0,0,0"
+                             Content="{l:Tr Stock_InHistory}" Command="{Binding ShowHistoryCommand}" />
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Search, category, show; the count takes what is left and wraps -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="190" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Style="{StaticResource Label}" Text="{l:Tr Search}" />
+            <TextBox x:Name="SearchBox" Grid.Column="2" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     l:Ui.Placeholder="{l:Tr Search_ProductPlaceholder}" AutomationProperties.Name="{l:Tr Search}" />
+            <TextBlock Grid.Column="4" Style="{StaticResource Label}" Text="{l:Tr Prices_Category}" />
+            <ComboBox Grid.Column="6" ItemsSource="{Binding CategoryOptions}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                      SelectedValue="{Binding Category}" AutomationProperties.Name="{l:Tr Prices_Category}" />
+            <TextBlock Grid.Column="8" Style="{StaticResource Label}" Text="{l:Tr Debts_Show}" />
+            <StackPanel Grid.Column="10" Orientation="Horizontal">
+                <RadioButton Style="{StaticResource ToggleFilterButton}" Content="{l:Tr Cat_All}"
+                             IsChecked="{Binding Show, Converter={StaticResource Eq}, ConverterParameter=All}" />
+                <RadioButton Style="{StaticResource ToggleFilterButton}" Content="{l:Tr Stock_OutOnly}" Margin="8,0,0,0"
+                             IsChecked="{Binding Show, Converter={StaticResource Eq}, ConverterParameter=Out}" />
+            </StackPanel>
+            <TextBlock Grid.Column="12" Style="{StaticResource Secondary}" Text="{Binding CountText}"
+                       TextWrapping="Wrap" TextAlignment="Right" />
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="540" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Stock table -->
+            <Grid>
+                <DataGrid ItemsSource="{Binding View}" SelectedItem="{Binding Selected}" AutomationProperties.Name="{l:Tr Stock_Current}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="{l:Tr Col_Product}" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="10,8" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding NameAndSize}" TextWrapping="Wrap"
+                                                   Foreground="{Binding Inactive, Converter={StaticResource BoolToSecondary}}" />
+                                        <TextBlock Text="{Binding Company}" TextWrapping="Wrap" Foreground="{StaticResource TextSecondary}"
+                                                   Visibility="{Binding Company, Converter={StaticResource BoolToVisible}}" />
+                                        <Border Style="{StaticResource Tag}" Margin="0,2,0,0"
+                                                Visibility="{Binding Inactive, Converter={StaticResource BoolToVisible}}">
+                                            <TextBlock Text="{l:Tr Prices_NotSold}" />
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="{l:Tr Col_Unit}" Binding="{Binding Unit}" Width="76" ElementStyle="{StaticResource CellText}" />
+                        <DataGridTemplateColumn Header="{l:Tr Col_InStock}" Width="120" HeaderStyle="{StaticResource NumHeader}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10,0">
+                                        <Border Style="{StaticResource OutTag}" Margin="0,0,8,0"
+                                                Visibility="{Binding IsOut, Converter={StaticResource BoolToVisible}}">
+                                            <TextBlock Text="{l:Tr Stock_Out}" />
+                                        </Border>
+                                        <TextBlock Text="{Binding OnHandText}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="{l:Tr Col_LastStockIn}" Binding="{Binding LastInText}" Width="128"
+                                            ElementStyle="{StaticResource CellText}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <TextBlock Style="{StaticResource EmptyState}" Text="{l:Tr Prices_Empty}"
+                           Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVisible}}" />
+            </Grid>
+
+            <!-- The selected product: stock now, last stock in, and every movement -->
+            <Border Grid.Column="2" Style="{StaticResource WhitePanel}" Padding="16,12" VerticalAlignment="Top"
+                    Visibility="{Binding HasSelection, Converter={StaticResource BoolToCollapsed}}">
+                <TextBlock Style="{StaticResource Hint}" Text="{l:Tr Stock_PickProduct}" />
+            </Border>
+            <Grid Grid.Column="2" Visibility="{Binding HasSelection, Converter={StaticResource BoolToVisible}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource WhitePanel}" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource H20}" Text="{Binding Selected.Product.FullName}" />
+                        <Grid Margin="0,8,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Foreground="{StaticResource TextSecondary}" Text="{l:Tr Stock_NowLabel}" />
+                                <TextBlock Style="{StaticResource Figure28}" Text="{Binding NowText}" TextWrapping="Wrap" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Foreground="{StaticResource TextSecondary}" Text="{l:Tr Col_LastStockIn}" />
+                                <TextBlock FontWeight="SemiBold" Text="{Binding LastInDate}" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding LastInDetail}" TextWrapping="Wrap"
+                                           Visibility="{Binding LastInDetail, Converter={StaticResource BoolToVisible}}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+                <TextBlock Grid.Row="2" Style="{StaticResource H18}" Text="{l:Tr Stock_Movements}" />
+                <Grid Grid.Row="4">
+                    <DataGrid ItemsSource="{Binding Movements}" AutomationProperties.Name="{l:Tr Stock_Movements}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{l:Tr Col_Date}" Binding="{Binding DateText}" Width="150"
+                                                ElementStyle="{StaticResource CellText}" />
+                            <DataGridTemplateColumn Header="{l:Tr Col_WhatHappened}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource CellText}" Text="{Binding WhatText}"
+                                                   FontWeight="{Binding IsStockIn, Converter={StaticResource BoolToSemiBold}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!-- Auto, not a fixed 76: a Burmese header must never wrap in the middle of a word. -->
+                            <DataGridTemplateColumn Header="{l:Tr Col_Change}" Width="Auto" MinWidth="76" HeaderStyle="{StaticResource NumHeader}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource CellNum}" Text="{Binding ChangeText}"
+                                                   FontWeight="{Binding IsStockIn, Converter={StaticResource BoolToSemiBold}}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="{l:Tr Col_After}" Binding="{Binding AfterText}" Width="Auto" MinWidth="76"
+                                                ElementStyle="{StaticResource CellNumBold}" HeaderStyle="{StaticResource NumHeader}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Style="{StaticResource EmptyState}" Text="{l:Tr Stock_NoMovements}"
+                               Visibility="{Binding NoMovements, Converter={StaticResource BoolToVisible}}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

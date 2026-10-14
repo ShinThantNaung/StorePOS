@@ -18,6 +18,7 @@
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                 <Button Content="{l:Tr Prices_Add}" Command="{Binding AddCommand}" />
                 <Button Content="{l:Tr Prices_Edit}" Command="{Binding EditCommand}" Margin="8,0,0,0" />
+                <Button Content="{l:Tr Prices_History}" Command="{Binding HistoryCommand}" Margin="8,0,0,0" />
                 <Button Content="{l:Tr Prices_Import}" Command="{Binding ImportCommand}" Margin="8,0,0,0" />
             </StackPanel>
             <Grid>
@@ -91,16 +92,19 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="{l:Tr Col_Company}" Binding="{Binding Company}" Width="180"
+                    <DataGridTextColumn Header="{l:Tr Col_Company}" Binding="{Binding Company}" Width="160"
                                         SortMemberPath="CompanySortKey" ElementStyle="{StaticResource CellText}" />
                     <DataGridTextColumn Header="{l:Tr Col_ProductSize}" Binding="{Binding Size}" Width="120" CanUserSort="False"
                                         ElementStyle="{StaticResource CellText}" />
-                    <DataGridTextColumn Header="{l:Tr Col_Category}" Binding="{Binding CategoryName}" Width="160"
+                    <DataGridTextColumn Header="{l:Tr Col_Category}" Binding="{Binding CategoryName}" Width="140"
                                         SortMemberPath="CategorySortKey" ElementStyle="{StaticResource CellText}" />
-                    <DataGridTextColumn Header="{l:Tr Col_Unit}" Binding="{Binding UnitDisplay}" Width="200" CanUserSort="False"
+                    <DataGridTextColumn Header="{l:Tr Col_Unit}" Binding="{Binding UnitDisplay}" Width="160" CanUserSort="False"
                                         ElementStyle="{StaticResource CellText}" />
-                    <DataGridTextColumn Header="{l:Tr Col_PriceKs}" Binding="{Binding PriceText}" Width="140" SortMemberPath="Price"
+                    <DataGridTextColumn Header="{l:Tr Col_PriceKs}" Binding="{Binding PriceText}" Width="120" SortMemberPath="Price"
                                         ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />
+                    <!-- PR1: the date the price last changed. Auto so the Burmese header never breaks inside a word. -->
+                    <DataGridTextColumn Header="{l:Tr Col_PriceChanged}" Binding="{Binding PriceChangedText}" Width="Auto" MinWidth="140"
+                                        SortMemberPath="PriceChangedAt" ElementStyle="{StaticResource CellText}" />
                 </DataGrid.Columns>
             </DataGrid>
             <TextBlock Style="{StaticResource EmptyState}" Text="{l:Tr Prices_Empty}"

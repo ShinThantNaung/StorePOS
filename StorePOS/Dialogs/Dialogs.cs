@@ -57,5 +57,22 @@ public static class Dialogs
 
     public static bool ImportCsv() => Show(new ImportCsvDialog());
 
+    /// <summary>PR9: read-only, so there is nothing to return.</summary>
+    public static void PriceHistory(Product product) => Show(new PriceHistoryDialog(product));
+
     public static bool RecordRepayment(CustomerBalance customer) => Show(new RepaymentDialog(customer));
+
+    /// <summary>ST3. Returns the new stock-in's id.</summary>
+    public static long? RecordStockIn()
+    {
+        var dialog = new RecordStockInDialog();
+        return Show(dialog) ? dialog.SavedId : null;
+    }
+
+    /// <summary>ST6, starting on the given product if any. Returns the adjusted product's id.</summary>
+    public static long? AdjustStock(long? productId)
+    {
+        var dialog = new AdjustStockDialog(productId);
+        return Show(dialog) ? dialog.SavedProductId : null;
+    }
 }

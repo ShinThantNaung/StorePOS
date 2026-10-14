@@ -4,9 +4,12 @@ using StorePOS.Models;
 
 namespace StorePOS.Services;
 
-public sealed class ProductService(Db db)
+public sealed class ProductService(Db db, Func<DateTime> clock)
 {
-    private const string Columns = "id, name, category, unit, price, sold_by_weight, active, company, size";
+    private const string Columns = """
+        id, name, category, unit, price, sold_by_weight, active, company, size,
+        (SELECT MAX(pc.changed_at) FROM price_changes pc WHERE pc.product_id = products.id)
+        """;
 
     internal static Product Map(Microsoft.Data.Sqlite.SqliteDataReader r) => new()
     {
@@ -19,6 +22,7 @@ public sealed class ProductService(Db db)
         Active = r.Bool(6),
         Company = r.GetString(7),
         Size = r.GetString(8),
+        PriceChangedAt = r.IsDBNull(9) ? null : Fmt.ParseDbTime(r.GetString(9)),
     };
 
     /// <summary>
@@ -75,17 +79,55 @@ public sealed class ProductService(Db db)
                 INSERT INTO products(name, name_key, category, unit, price, sold_by_weight, active, company, size)
                 VALUES($name, $key, $cat, $unit, $price, $w, $a, $co, $size)
                 """, ps);
+            RecordPriceChange(s, id, null, p.Price, PriceSource.Added, "", clock());
         }
         else
         {
+            var oldPrice = s.Scalar<long?>("SELECT price FROM products WHERE id = $id", ("$id", p.Id));
             s.Exec("""
                 UPDATE products SET name=$name, name_key=$key, category=$cat, unit=$unit,
                     price=$price, sold_by_weight=$w, active=$a, company=$co, size=$size
                 WHERE id=$id
                 """, ps);
             id = p.Id;
+            if (oldPrice != null && oldPrice != p.Price)
+                RecordPriceChange(s, id, oldPrice, p.Price, PriceSource.Edited, "", clock());
         }
         s.Commit();
         return id;
+    }
+
+    /// <summary>
+    /// PR8: called inside the transaction that writes products.price, so the price and its history
+    /// are saved together or not at all. History rows are never edited or deleted.
+    /// </summary>
+    internal static void RecordPriceChange(Session s, long productId, long? oldPrice, long newPrice,
+        PriceSource source, string fileName, DateTime at) =>
+        s.Exec("""
+            INSERT INTO price_changes(product_id, changed_at, old_price, new_price, source, file_name)
+            VALUES($p, $t, $old, $new, $src, $f)
+            """,
+            ("$p", productId), ("$t", Fmt.DbTime(at)), ("$old", oldPrice), ("$new", newPrice),
+            ("$src", source switch { PriceSource.Added => "added", PriceSource.Edited => "edited", _ => "csv_import" }),
+            ("$f", fileName));
+
+    /// <summary>PR9: every price the product has had, newest first.</summary>
+    public List<PriceChange> PriceHistory(long productId)
+    {
+        using var s = db.Read();
+        return s.Query("""
+            SELECT id, changed_at, old_price, new_price, source, file_name FROM price_changes
+            WHERE product_id = $p ORDER BY changed_at DESC, id DESC
+            """,
+            r => new PriceChange
+            {
+                Id = r.GetInt64(0),
+                At = Fmt.ParseDbTime(r.GetString(1)),
+                OldPrice = r.LongOrNull(2),
+                NewPrice = r.GetInt64(3),
+                Source = r.GetString(4) switch { "added" => PriceSource.Added, "edited" => PriceSource.Edited, _ => PriceSource.CsvImport },
+                FileName = r.GetString(5),
+            },
+            ("$p", productId));
     }
 }

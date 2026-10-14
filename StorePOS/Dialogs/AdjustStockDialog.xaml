@@ -1,0 +1,77 @@
+<Window x:Class="StorePOS.Dialogs.AdjustStockDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:StorePOS.Infrastructure"
+        xmlns:c="clr-namespace:StorePOS.Controls"
+        Style="{StaticResource DialogWindow}" Title="{l:Tr App_Title}" Width="560" MinHeight="520">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="24" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource H24}" Text="{l:Tr Adjust_Title}" />
+        <TextBlock Grid.Row="1" Style="{StaticResource Hint}" Text="{l:Tr Adjust_Subtitle}" />
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock Style="{StaticResource Label}" Text="{l:Tr Col_Product}" TextWrapping="Wrap" />
+            <c:ProductPicker x:Name="Picker" Grid.Column="2" Products="{Binding Products}" SelectedProduct="{Binding Product}"
+                             Label="{l:Tr Col_Product}" Picked="Picker_Picked" />
+
+            <TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="{l:Tr Adjust_AppSays}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" Grid.Column="2" Style="{StaticResource H20}" Text="{Binding AppSaysText}" />
+
+            <TextBlock Grid.Row="4" Style="{StaticResource Label}" Text="{l:Tr Adjust_Counted}" TextWrapping="Wrap" />
+            <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal">
+                <TextBox x:Name="CountBox" Style="{StaticResource BigMoneyTextBox}" Width="120"
+                         Text="{Binding CountText, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="{l:Tr Adjust_Counted}" />
+                <TextBlock Style="{StaticResource Label}" Text="{Binding UnitWord}" Margin="8,0,0,0" />
+            </StackPanel>
+
+            <TextBlock Grid.Row="6" Style="{StaticResource Label}" Text="{l:Tr Adjust_Difference}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="6" Grid.Column="2" Style="{StaticResource Warning}" VerticalAlignment="Center" Text="{Binding DifferenceText}" />
+
+            <TextBlock Grid.Row="8" Style="{StaticResource Label}" Text="{l:Tr Adjust_Reason}" TextWrapping="Wrap" />
+            <ComboBox Grid.Row="8" Grid.Column="2" ItemsSource="{Binding Reasons}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                      SelectedValue="{Binding Reason}" AutomationProperties.Name="{l:Tr Adjust_Reason}" />
+
+            <TextBlock Grid.Row="10" Style="{StaticResource Label}" Text="{l:Tr StockIn_Note}" TextWrapping="Wrap" />
+            <TextBox Grid.Row="10" Grid.Column="2" Text="{Binding NoteText, UpdateSourceTrigger=PropertyChanged}"
+                     l:Ui.Placeholder="{l:Tr Adjust_NotePlaceholder}" AutomationProperties.Name="{l:Tr StockIn_Note}" />
+        </Grid>
+
+        <TextBlock Grid.Row="5" Style="{StaticResource Hint}" Text="{l:Tr Adjust_Hint}" />
+        <TextBlock Grid.Row="6" Style="{StaticResource Warning}" Margin="0,8,0,0" Text="{Binding Problem}"
+                   Visibility="{Binding Problem, Converter={StaticResource BoolToVisible}}" />
+
+        <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{l:Tr Dialog_Cancel}" IsCancel="True" />
+            <Button Style="{StaticResource PrimaryButton}" MinWidth="160" Margin="8,0,0,0" IsDefault="True"
+                    Content="{l:Tr Adjust_Save}" IsEnabled="{Binding CanSave}" Click="Save_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -122,6 +122,12 @@
         <Setter Property="TextElement.Foreground" Value="{StaticResource TextSecondary}" />
     </Style>
 
+    <!-- "OUT" tag on the Stock screen: like the VOIDED tag, but in the main text colour. -->
+    <Style x:Key="OutTag" TargetType="Border" BasedOn="{StaticResource Tag}">
+        <Setter Property="BorderBrush" Value="{StaticResource Text}" />
+        <Setter Property="TextElement.Foreground" Value="{StaticResource Text}" />
+    </Style>
+
     <!-- 5. Default button: Grey200 fill, Grey500 border. Hover Grey300. -->
     <Style TargetType="Button">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusRing}" />
@@ -399,11 +405,16 @@
                                 </ControlTemplate>
                             </ToggleButton.Template>
                         </ToggleButton>
-                        <ContentPresenter IsHitTestVisible="False" Margin="10,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                        <ContentPresenter x:Name="Selection" IsHitTestVisible="False" Margin="10,0,40,0" VerticalAlignment="Center" HorizontalAlignment="Left"
                                           Content="{TemplateBinding SelectionBoxItem}"
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                           ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" />
+                        <!-- IsEditable: type a new value or pick an earlier one (the stock-in supplier). -->
+                        <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Visibility="Collapsed" Margin="1,1,40,1" Padding="7,0,0,0"
+                                 BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center"
+                                 Foreground="{TemplateBinding Foreground}" FontSize="{TemplateBinding FontSize}"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}" />
                         <Popup x:Name="PART_Popup" Placement="Bottom" Focusable="False" AllowsTransparency="False" PopupAnimation="None"
                                IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <Border Background="{StaticResource White}" BorderBrush="{StaticResource Grey500}" BorderThickness="1"
@@ -415,6 +426,12 @@
                             </Border>
                         </Popup>
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEditable" Value="True">
+                            <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Selection" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

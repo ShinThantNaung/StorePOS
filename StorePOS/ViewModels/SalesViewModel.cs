@@ -25,7 +25,7 @@ public sealed class CartLine : ObservableObject
 
     public Product Product { get; }
     public string Name => Product.FullName;
-    public string Unit => Product.Unit;
+    public string Unit => Units.Display(Product.Unit);
     public long ListPrice { get; }
 
     public string QtyText

@@ -1,0 +1,11 @@
+<UserControl x:Class="StorePOS.Controls.ShopHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l="clr-namespace:StorePOS.Infrastructure"
+             Focusable="False">
+    <!-- Shop name across the top of every main screen. Grey like the sidebar and status bar; the accent stays reserved. -->
+    <Border Background="{StaticResource Grey200}" BorderBrush="{StaticResource Grey400}" BorderThickness="0,0,0,1">
+        <TextBlock Style="{StaticResource H20}" Text="{l:Tr Shop_Name}" Margin="20,0" VerticalAlignment="Center"
+                   TextWrapping="NoWrap" AutomationProperties.HeadingLevel="Level1" />
+    </Border>
+</UserControl>

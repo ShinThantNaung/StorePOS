@@ -10,6 +10,10 @@ public static class Fmt
 
     public static string Money(long value) => value.ToString("#,0", Inv);
 
+    /// <summary>A price change: "+1,000" or "−500", with a true minus sign.</summary>
+    public static string SignedMoney(long value) =>
+        value < 0 ? "−" + Money(-value) : value > 0 ? "+" + Money(value) : Money(0);
+
     /// <summary>"78,500 Ks"</summary>
     public static string Ks(long value) => Loc.F("Fmt_Ks", Money(value));
 
@@ -18,6 +22,10 @@ public static class Fmt
     /// <summary>Weight products show the unit ("2.5 kg"); counted products show the number only.</summary>
     public static string QtyWithUnit(decimal value, string unit, bool soldByWeight) =>
         soldByWeight ? $"{Qty(value)} {unit}" : Qty(value);
+
+    /// <summary>Stock and stock changes: "−2" with a true minus sign, "+36" when the sign is asked for.</summary>
+    public static string Stock(decimal value, bool showPlus = false) =>
+        value < 0 ? "−" + Qty(-value) : showPlus && value > 0 ? "+" + Qty(value) : Qty(value);
 
     public static string SaleNo(long id) => "#" + id.ToString("0000", Inv);
 
@@ -47,8 +55,8 @@ public static class Fmt
         return long.TryParse(s, NumberStyles.None, Inv, out value);
     }
 
-    /// <summary>Accepts "2", "2.5", "1,000". At most 3 decimal places. Must be more than zero.</summary>
-    public static bool TryParseQty(string? text, bool allowDecimals, out decimal value)
+    /// <summary>Accepts "2", "2.5", "1,000". At most 3 decimal places. Must be more than zero, unless allowZero (a shelf count).</summary>
+    public static bool TryParseQty(string? text, bool allowDecimals, out decimal value, bool allowZero = false)
     {
         value = 0;
         var s = NormalizeDigits(text).Replace(",", "");
@@ -57,7 +65,7 @@ public static class Fmt
         if (dot >= 0 && (!allowDecimals || s.Length - dot - 1 > 3 || dot != s.LastIndexOf('.'))) return false;
         foreach (var ch in s) if ((ch < '0' || ch > '9') && ch != '.') return false;
         if (!decimal.TryParse(s, NumberStyles.AllowDecimalPoint, Inv, out value)) return false;
-        return value > 0;
+        return allowZero || value > 0;
     }
 
     public static long ToMilli(decimal qty) => (long)(qty * 1000m);

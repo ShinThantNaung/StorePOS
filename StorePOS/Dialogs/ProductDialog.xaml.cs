@@ -19,7 +19,9 @@ public partial class ProductDialog : Window
         NameBox.Text = existing?.Name ?? "";
         CompanyBox.Text = existing?.Company ?? "";
         SizeBox.Text = existing?.Size ?? "";
-        UnitBox.Text = existing?.Unit ?? "";
+        UnitBox.ItemsSource = Units.All.Select(u => new { Label = Units.Display(u), Value = u }).ToList();
+        // An older product with some other typed unit starts with nothing chosen, so saving asks for one.
+        UnitBox.SelectedValue = existing == null ? Units.Bottle : Units.TryParse(existing.Unit, out var unit) ? unit : null;
         PriceBox.Text = existing == null ? "" : Fmt.Money(existing.Price);
         WeightBox.IsChecked = existing?.SoldByWeight ?? false;
         ActiveBox.IsChecked = existing?.Active ?? true;
@@ -58,7 +60,7 @@ public partial class ProductDialog : Window
                 Company = CompanyBox.Text,
                 Size = SizeBox.Text,
                 Category = (Category)CategoryBox.SelectedValue,
-                Unit = UnitBox.Text,
+                Unit = UnitBox.SelectedValue as string ?? "",
                 Price = price,
                 SoldByWeight = WeightBox.IsChecked == true,
                 Active = active,

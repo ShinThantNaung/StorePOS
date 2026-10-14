@@ -6,8 +6,10 @@
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <!-- All screen text, English. Burmese is in Strings.my.resx with the same keys. -->
   <data name="App_Title" xml:space="preserve"><value>Store POS</value></data>
+  <data name="Shop_Name" xml:space="preserve"><value>Shin Thant - Pesticide and Herbicide Store</value></data>
   <data name="Nav_Sales" xml:space="preserve"><value>Sales</value></data>
   <data name="Nav_Prices" xml:space="preserve"><value>Prices</value></data>
+  <data name="Nav_Stock" xml:space="preserve"><value>Stock</value></data>
   <data name="Nav_Debts" xml:space="preserve"><value>Debts</value></data>
   <data name="Nav_Reports" xml:space="preserve"><value>Reports</value></data>
   <data name="Nav_Backup" xml:space="preserve"><value>Backup</value></data>
@@ -124,7 +126,8 @@
   <data name="Product_SizePlaceholder" xml:space="preserve"><value>For example 1 litre, 500 cc (optional)</value></data>
   <data name="Product_Category" xml:space="preserve"><value>Category</value></data>
   <data name="Product_Unit" xml:space="preserve"><value>Unit</value></data>
-  <data name="Product_UnitPlaceholder" xml:space="preserve"><value>For example bottle, bag, kg</value></data>
+  <data name="Unit_Bottle" xml:space="preserve"><value>Bottle</value></data>
+  <data name="Unit_Bag" xml:space="preserve"><value>Bag</value></data>
   <data name="Product_Price" xml:space="preserve"><value>Price</value></data>
   <data name="Product_SoldByWeight" xml:space="preserve"><value>Sold by weight (decimals allowed, for example 2.5 kg)</value></data>
   <data name="Product_Active" xml:space="preserve"><value>On sale (shown on the Sales screen)</value></data>
@@ -290,7 +293,7 @@
   <data name="Language_Restart" xml:space="preserve"><value>Close and open the app again to change the language.</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>Something went wrong: {0}. Nothing was saved. Try again; if it keeps happening, write down what you did.</value></data>
   <data name="Err_NameRequired" xml:space="preserve"><value>Type a name.</value></data>
-  <data name="Err_UnitRequired" xml:space="preserve"><value>Type the unit.</value></data>
+  <data name="Err_UnitRequired" xml:space="preserve"><value>Choose the unit.</value></data>
   <data name="Err_PriceInvalid" xml:space="preserve"><value>The price must be a whole number of kyat.</value></data>
   <data name="Err_NameExists" xml:space="preserve"><value>A product with this name, company and size already exists.</value></data>
   <data name="Err_CustomerExists" xml:space="preserve"><value>A customer with this name and address already exists. Pick them from the list instead.</value></data>
@@ -308,4 +311,99 @@
   <data name="Err_AlreadyReversed" xml:space="preserve"><value>This repayment is already reversed.</value></data>
   <data name="Err_AmountInvalid" xml:space="preserve"><value>Type an amount more than zero.</value></data>
   <data name="Err_DateFuture" xml:space="preserve"><value>The date cannot be in the future.</value></data>
+  <!-- Stock (Feature 5) -->
+  <data name="Stock_Current" xml:space="preserve"><value>Current stock</value></data>
+  <data name="Stock_InHistory" xml:space="preserve"><value>Stock-in history</value></data>
+  <data name="Stock_Adjust" xml:space="preserve"><value>Adjust count</value></data>
+  <data name="Stock_RecordIn" xml:space="preserve"><value>Record stock in</value></data>
+  <data name="Stock_OutOnly" xml:space="preserve"><value>Out of stock</value></data>
+  <data name="Stock_Showing" xml:space="preserve"><value>Showing {0} of {1}, {2} out of stock</value></data>
+  <data name="Stock_Out" xml:space="preserve"><value>OUT</value></data>
+  <data name="Stock_NowLabel" xml:space="preserve"><value>In stock now</value></data>
+  <data name="Stock_LastInFrom" xml:space="preserve"><value>{0} from {1}</value></data>
+  <data name="Stock_LastInNone" xml:space="preserve"><value>No stock in yet</value></data>
+  <data name="Stock_Movements" xml:space="preserve"><value>Stock movements, newest first</value></data>
+  <data name="Stock_NoMovements" xml:space="preserve"><value>No stock movements yet. Use Adjust count to enter what is on the shelf.</value></data>
+  <data name="Stock_PickProduct" xml:space="preserve"><value>Click a product to see its stock movements.</value></data>
+  <data name="Col_InStock" xml:space="preserve"><value>In stock</value></data>
+  <data name="Col_LastStockIn" xml:space="preserve"><value>Last stock in</value></data>
+  <data name="Col_WhatHappened" xml:space="preserve"><value>What happened</value></data>
+  <data name="Col_Change" xml:space="preserve"><value>Change</value></data>
+  <data name="Col_After" xml:space="preserve"><value>After</value></data>
+  <data name="Col_Before" xml:space="preserve"><value>Before</value></data>
+  <data name="Col_Added" xml:space="preserve"><value>Added</value></data>
+  <data name="Col_From" xml:space="preserve"><value>From</value></data>
+  <data name="Col_ProductsReceived" xml:space="preserve"><value>Products received</value></data>
+  <data name="Col_InStockNow" xml:space="preserve"><value>In stock now</value></data>
+  <data name="Col_Adding" xml:space="preserve"><value>Adding</value></data>
+  <data name="Move_Sale" xml:space="preserve"><value>Sale {0}</value></data>
+  <data name="Move_SaleTo" xml:space="preserve"><value>Sale {0}, {1}</value></data>
+  <data name="Move_Void" xml:space="preserve"><value>Sale {0} voided, stock returned</value></data>
+  <data name="Move_StockIn" xml:space="preserve"><value>Stock in</value></data>
+  <data name="Move_StockInFrom" xml:space="preserve"><value>Stock in from {0}</value></data>
+  <data name="Move_Adjust" xml:space="preserve"><value>Count adjusted: {0}</value></data>
+  <data name="Move_AdjustNote" xml:space="preserve"><value>Count adjusted: {0}, {1}</value></data>
+  <data name="Adjust_Reason_Damaged" xml:space="preserve"><value>Damaged or leaking</value></data>
+  <data name="Adjust_Reason_CountWrong" xml:space="preserve"><value>Count was wrong</value></data>
+  <data name="Adjust_Reason_Expired" xml:space="preserve"><value>Expired</value></data>
+  <data name="Adjust_Reason_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="UnitWord_Bottle_One" xml:space="preserve"><value>bottle</value></data>
+  <data name="UnitWord_Bottle_Many" xml:space="preserve"><value>bottles</value></data>
+  <data name="UnitWord_Bag_One" xml:space="preserve"><value>bag</value></data>
+  <data name="UnitWord_Bag_Many" xml:space="preserve"><value>bags</value></data>
+  <data name="StockIns_SearchPlaceholder" xml:space="preserve"><value>Product or supplier</value></data>
+  <data name="StockIns_CountOne" xml:space="preserve"><value>1 stock-in</value></data>
+  <data name="StockIns_Count" xml:space="preserve"><value>{0} stock-ins</value></data>
+  <data name="StockIns_Empty" xml:space="preserve"><value>No stock-ins match. Check the spelling.</value></data>
+  <data name="StockIns_None" xml:space="preserve"><value>No stock-ins yet. Press Record stock in when a delivery arrives.</value></data>
+  <data name="StockIns_OneProduct" xml:space="preserve"><value>1 product: {0}</value></data>
+  <data name="StockIns_Products" xml:space="preserve"><value>{0} products: {1}</value></data>
+  <data name="StockIns_NotGiven" xml:space="preserve"><value>Not given</value></data>
+  <data name="StockIns_Show" xml:space="preserve"><value>Show products of the stock in on {0}</value></data>
+  <data name="StockIns_Hide" xml:space="preserve"><value>Hide products of the stock in on {0}</value></data>
+  <data name="StockIn_From" xml:space="preserve"><value>From</value></data>
+  <data name="StockIn_Note" xml:space="preserve"><value>Note</value></data>
+  <data name="StockIn_NotePlaceholder" xml:space="preserve"><value>Optional, for example the invoice number</value></data>
+  <data name="StockIn_Add" xml:space="preserve"><value>Add</value></data>
+  <data name="StockIn_Hint" xml:space="preserve"><value>Bags, bottles and packs: whole numbers. Products sold by kg: decimals allowed, for example 25.5.</value></data>
+  <data name="StockIn_Empty" xml:space="preserve"><value>Find a product, type the quantity and press Add.</value></data>
+  <data name="StockIn_FooterOne" xml:space="preserve"><value>1 product. Stock goes up as soon as you save.</value></data>
+  <data name="StockIn_Footer" xml:space="preserve"><value>{0} products. Stock goes up as soon as you save.</value></data>
+  <data name="StockIn_Save" xml:space="preserve"><value>Save stock in</value></data>
+  <data name="StockIn_AddingFor" xml:space="preserve"><value>Adding, {0}</value></data>
+  <data name="StockIn_RemoveFor" xml:space="preserve"><value>Remove {0}</value></data>
+  <data name="StockIn_PickFirst" xml:space="preserve"><value>Choose a product from the list first.</value></data>
+  <data name="Adjust_Title" xml:space="preserve"><value>Adjust stock count</value></data>
+  <data name="Adjust_Subtitle" xml:space="preserve"><value>Use this when the shelf count does not match the app.</value></data>
+  <data name="Adjust_AppSays" xml:space="preserve"><value>App says</value></data>
+  <data name="Adjust_Counted" xml:space="preserve"><value>Counted on shelf</value></data>
+  <data name="Adjust_Difference" xml:space="preserve"><value>Difference</value></data>
+  <data name="Adjust_NoChange" xml:space="preserve"><value>No change</value></data>
+  <data name="Adjust_TypeCount" xml:space="preserve"><value>Type the number you counted</value></data>
+  <data name="Adjust_Reason" xml:space="preserve"><value>Reason</value></data>
+  <data name="Adjust_NotePlaceholder" xml:space="preserve"><value>Optional</value></data>
+  <data name="Adjust_Hint" xml:space="preserve"><value>The old number stays in the stock history. Nothing is deleted.</value></data>
+  <data name="Adjust_Save" xml:space="preserve"><value>Save count</value></data>
+  <data name="Picker_NoMatch" xml:space="preserve"><value>No products match.</value></data>
+  <data name="Err_StockIn_Empty" xml:space="preserve"><value>Add at least one product.</value></data>
+  <data name="Err_StockQtyWhole" xml:space="preserve"><value>{0} is counted in whole numbers only.</value></data>
+  <data name="Err_ProductNotFound" xml:space="preserve"><value>This product could not be found.</value></data>
+  <data name="Err_Adjust_NoChange" xml:space="preserve"><value>The count is the same as the app. Nothing to save.</value></data>
+  <!-- Price history (PR8, PR9) -->
+  <data name="Prices_History" xml:space="preserve"><value>Price history</value></data>
+  <data name="Col_PriceChanged" xml:space="preserve"><value>Price changed</value></data>
+  <data name="Col_HowChanged" xml:space="preserve"><value>How it changed</value></data>
+  <data name="PriceHistory_SoldBy" xml:space="preserve"><value>{0}, sold by the {1}</value></data>
+  <data name="PriceHistory_SoldByWeight" xml:space="preserve"><value>{0}, sold by weight ({1})</value></data>
+  <data name="PriceHistory_Now" xml:space="preserve"><value>Price now</value></data>
+  <data name="PriceHistory_Since" xml:space="preserve"><value>since {0}</value></data>
+  <data name="PriceHistory_FirstPrice" xml:space="preserve"><value>First price</value></data>
+  <data name="PriceHistory_Added" xml:space="preserve"><value>Added in Add product</value></data>
+  <data name="PriceHistory_Edited" xml:space="preserve"><value>Changed in Edit product</value></data>
+  <data name="PriceHistory_CsvAdded" xml:space="preserve"><value>Added by CSV import, {0}</value></data>
+  <data name="PriceHistory_CsvAddedNoFile" xml:space="preserve"><value>Added by CSV import</value></data>
+  <data name="PriceHistory_Csv" xml:space="preserve"><value>CSV import, {0}</value></data>
+  <data name="PriceHistory_CsvNoFile" xml:space="preserve"><value>CSV import</value></data>
+  <data name="PriceHistory_Note" xml:space="preserve"><value>Past sales keep the price they were sold at. A price changed for one sale only is not listed here.</value></data>
+  <data name="PriceHistory_Empty" xml:space="preserve"><value>No price changes are recorded for this product yet.</value></data>
 </root>

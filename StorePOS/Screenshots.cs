@@ -98,6 +98,42 @@ internal static class Screenshots
         import.Load(csv);
         DialogShot(folder, "13-import", import);
 
+        main.Navigate(Section.Stock);
+        var stock = main.StockPage;
+        stock.Selected = stock.View.Cast<StockRow>()
+            .First(r => r.Product.Name.StartsWith("Glyphosate") && r.Product.Company == "Green Valley" && r.Product.Size == "1 L");
+        Shot(window.Root, folder, "14-stock");
+        stock.Show = "Out";
+        Shot(window.Root, folder, "15-stock-out");
+        stock.Show = "All";
+
+        main.OpenStockIns();
+        if (main.StockInsPage.View.Count > 1) ((StockInRow)main.StockInsPage.View.GetItemAt(1)).IsExpanded = true;
+        Shot(window.Root, folder, "16-stock-ins");
+
+        var stockIn = new RecordStockInDialog();
+        foreach (var (name, qty) in new[] { ("Glyphosate", "24"), ("Paraquat", "24"), ("Butachlor", "12") })
+        {
+            stockIn.PickedProduct = stockIn.Products.First(p => p.Name.StartsWith(name));
+            stockIn.QtyText = qty;
+            stockIn.AddCommand.Execute(null);
+        }
+        stockIn.SupplierText = "Shwe Pyi Trading";
+        stockIn.NoteText = "Invoice SP-1204";
+        DialogShot(folder, "17-stock-in", stockIn);
+
+        var paraquat = s.Products.List(false).First(p => p.Name.StartsWith("Paraquat"));
+        var adjust = new AdjustStockDialog(paraquat.Id)
+        {
+            CountText = Fmt.Qty(Math.Max(0, s.Stock.OnHand(paraquat.Id) - 2)),
+            Reason = AdjustReason.Damaged,
+            NoteText = "2 bottles cracked in the box",
+        };
+        DialogShot(folder, "18-adjust", adjust);
+
+        var glyphosate = s.Products.List(false).First(p => p.Name.StartsWith("Glyphosate") && p.Company == "Green Valley" && p.Size == "1 L");
+        DialogShot(folder, "19-price-history", new PriceHistoryDialog(glyphosate));
+
         Application.Current.Shutdown();
     }
 

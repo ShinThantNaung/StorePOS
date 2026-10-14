@@ -53,8 +53,8 @@
                       AutomationProperties.Name="{l:Tr Product_Category}" />
 
             <TextBlock Grid.Row="8" Style="{StaticResource Label}" Text="{l:Tr Product_Unit}" />
-            <TextBox x:Name="UnitBox" Grid.Row="8" Grid.Column="2" l:Ui.Placeholder="{l:Tr Product_UnitPlaceholder}"
-                     AutomationProperties.Name="{l:Tr Product_Unit}" />
+            <ComboBox x:Name="UnitBox" Grid.Row="8" Grid.Column="2" DisplayMemberPath="Label" SelectedValuePath="Value"
+                      AutomationProperties.Name="{l:Tr Product_Unit}" />
 
             <TextBlock Grid.Row="10" Style="{StaticResource Label}" Text="{l:Tr Product_Price}" />
             <StackPanel Grid.Row="10" Grid.Column="2" Orientation="Horizontal">

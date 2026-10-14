@@ -4,7 +4,7 @@ using StorePOS.Services;
 
 namespace StorePOS.ViewModels;
 
-public enum Section { Sales, Prices, Debts, Reports, Backup }
+public enum Section { Sales, Prices, Stock, Debts, Reports, Backup }
 
 public interface IPage
 {
@@ -26,6 +26,8 @@ public sealed class MainViewModel : ObservableObject
         _s = services;
         SalesPage = new SalesViewModel(services, this);
         PricesPage = new PricesViewModel(services);
+        StockPage = new StockViewModel(services, this);
+        StockInsPage = new StockInsViewModel(services, this);
         DebtsPage = new DebtsViewModel(services, this);
         ReportsPage = new ReportsViewModel(services);
         BackupPage = new BackupViewModel(services, this);
@@ -44,6 +46,8 @@ public sealed class MainViewModel : ObservableObject
 
     public SalesViewModel SalesPage { get; }
     public PricesViewModel PricesPage { get; }
+    public StockViewModel StockPage { get; }
+    public StockInsViewModel StockInsPage { get; }
     public DebtsViewModel DebtsPage { get; }
     public ReportsViewModel ReportsPage { get; }
     public BackupViewModel BackupPage { get; }
@@ -81,6 +85,7 @@ public sealed class MainViewModel : ObservableObject
         {
             Section.Sales => SalesPage,
             Section.Prices => PricesPage,
+            Section.Stock => StockPage,
             Section.Debts => DebtsPage,
             Section.Reports => ReportsPage,
             _ => BackupPage,
@@ -96,6 +101,14 @@ public sealed class MainViewModel : ObservableObject
         var page = new CustomerDetailViewModel(_s, this, customerId);
         page.Activate();
         CurrentPage = page;
+    }
+
+    /// <summary>Stock-in history counts as part of Stock, so Stock stays marked.</summary>
+    public void OpenStockIns()
+    {
+        Section = Section.Stock;
+        StockInsPage.Activate();
+        CurrentPage = StockInsPage;
     }
 
     /// <summary>After a restore every screen must re-read the database.</summary>

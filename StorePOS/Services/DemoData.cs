@@ -38,7 +38,43 @@ public static class DemoData
             Name = p.Name, Company = p.Company, Size = p.Size, Category = p.Cat, Unit = p.Unit, Price = p.Price,
             SoldByWeight = p.Weight, Active = true,
         }).ToList();
-        foreach (var p in list) p.Id = s.Products.Save(p);
+
+        // Price history, all before the first sale: four products started cheaper, a CSV price list
+        // raised them, and Glyphosate was changed once more in Edit product.
+        var today = s.Today;
+        var current = today.AddDays(-60).AddHours(9);
+        var catalog = new ProductService(s.Db, () => current);
+        (string Name, string Company, string Size, long First, long FromCsv)[] rises =
+        [
+            ("Glyphosate herbicide", "Green Valley", "1 L", 13500, 14000),
+            ("Paraquat herbicide", "Shwe Lal", "500 ml", 8000, 8500),
+            ("Urea fertilizer", "Green Valley", "50 kg", 100000, 105000),
+            ("NPK 15-15-15 fertilizer", "Golden Harvest", "50 kg", 120000, 125000),
+        ];
+        Product Exact(string name, string company, string size) =>
+            list.First(p => p.Name == name && p.Company == company && p.Size == size);
+        foreach (var p in list)
+        {
+            var final = p.Price;
+            var rise = rises.FirstOrDefault(r => r.Name == p.Name && r.Company == p.Company && r.Size == p.Size);
+            if (rise.Name != null) p.Price = rise.First;
+            p.Id = catalog.Save(p);
+            p.Price = final;
+        }
+
+        current = today.AddDays(-40).AddHours(8);
+        var csv = string.Join(Environment.NewLine, rises.Select(r =>
+        {
+            var p = Exact(r.Name, r.Company, r.Size);
+            return $"{r.Name},{Categories.Code(p.Category)},{p.Unit},{r.FromCsv},no,{r.Company},{r.Size}";
+        }));
+        var import = new CsvImportService(s.Db, catalog, () => current);
+        var preview = import.Preview(System.Text.Encoding.UTF8.GetBytes(csv));
+        preview.FileName = "prices-sep-2026.csv";
+        import.Apply(preview);
+
+        current = today.AddDays(-25).AddHours(8).AddMinutes(5);
+        catalog.Save(Exact("Glyphosate herbicide", "Green Valley", "1 L"));
 
         (string Name, string Address)[] customers =
         [
@@ -48,15 +84,47 @@ public static class DemoData
         ];
         var customerIds = customers.Select(c => s.Debts.SaveCustomer(new Customer { Name = c.Name, Address = c.Address })).ToList();
 
-        var current = s.Clock();
+        current = s.Clock();
         var sales = new SaleService(s.Db, () => current);
         var debts = new DebtService(s.Db, () => current);
+        var stock = new StockService(s.Db, s.Products, () => current);
         var rng = new Random(7);
-        var today = s.Today;
         long? toVoid = null;
+
+        // Opening stock, counted the evening before the first sale. The sprayers run out.
+        Product Find(string name) => list.First(p => p.Name.StartsWith(name, StringComparison.Ordinal));
+        current = today.AddDays(-21).AddHours(17);
+        foreach (var p in list)
+            stock.Adjust(p.Id, p.SoldByWeight ? 150 : p.Name.StartsWith("Knapsack") ? 30 : 60, AdjustReason.CountWrong, "Opening count");
+
+        // Deliveries, by how many days before today they came in.
+        var deliveries = new Dictionary<int, (string Supplier, string Note, (string Name, decimal Qty)[] Lines)>
+        {
+            [15] = ("Shwe Pyi Trading", "Invoice SP-1162", [("2,4-D", 12), ("Butachlor", 18)]),
+            [9] = ("Aye Mya Agro Supply", "Invoice AM-2198", [("Potash", 10), ("Mancozeb", 20), ("Urea fertilizer (loose)", 100)]),
+            [5] = ("", "", [("Rice seed", 150)]),
+            [4] = ("Shwe Pyi Trading", "Invoice SP-1189",
+                [("Glyphosate herbicide", 36), ("Paraquat", 24), ("Cypermethrin", 36), ("Chlorpyrifos", 12), ("Imidacloprid", 24)]),
+            [1] = ("Aye Mya Agro Supply", "Invoice AM-2231", [("Urea fertilizer", 20), ("NPK 15-15-15 fertilizer", 15)]),
+        };
 
         for (var day = today.AddDays(-20); day <= today; day = day.AddDays(1))
         {
+            var daysAgo = (today - day).Days;
+            if (deliveries.TryGetValue(daysAgo, out var delivery))
+            {
+                current = day.AddHours(7).AddMinutes(45);
+                stock.RecordStockIn(day, delivery.Supplier, delivery.Note,
+                    delivery.Lines.Select(l => new StockInLineInput(Find(l.Name).Id, l.Qty)).ToList());
+            }
+            if (daysAgo == 3)
+            {
+                current = day.AddHours(7).AddMinutes(50);
+                var paraquat = Find("Paraquat");
+                var shelf = stock.OnHand(paraquat.Id);
+                if (shelf >= 1) stock.Adjust(paraquat.Id, shelf - 1, AdjustReason.Damaged, "1 bottle leaking");
+            }
+
             var count = rng.Next(4, 10);
             var minute = 8 * 60;
             for (var n = 0; n < count; n++)

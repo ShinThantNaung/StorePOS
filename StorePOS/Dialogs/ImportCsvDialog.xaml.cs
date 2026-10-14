@@ -12,7 +12,7 @@ public sealed class ImportRowView(ImportRow r)
     public int Row => r.Row;
     public string Name => Product.FormatFullName(r.Name, r.Size, r.Company);
     public string CategoryName => Categories.Display(r.Category);
-    public string UnitText => r.SoldByWeight ? Loc.F("Import_UnitWeight", r.Unit) : r.Unit;
+    public string UnitText => r.SoldByWeight ? Loc.F("Import_UnitWeight", Units.Display(r.Unit)) : Units.Display(r.Unit);
     public string PriceText => Fmt.Money(r.Price);
     public bool IsChange => r.Kind != ImportKind.NoChange;
 

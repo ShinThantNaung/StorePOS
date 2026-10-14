@@ -5,7 +5,7 @@ namespace StorePOS.Data;
 /// <summary>The local SQLite file. Every write that touches more than one row runs in one transaction.</summary>
 public sealed class Db(string filePath)
 {
-    public const int SchemaVersion = 2;
+    public const int SchemaVersion = 4;
 
     public string FilePath { get; } = filePath;
 
@@ -37,6 +37,8 @@ public sealed class Db(string filePath)
         var version = s.Scalar<long>("PRAGMA user_version");
         if (version < 1) s.Exec(Schema);
         if (version < 2) s.Exec(SchemaV2);
+        if (version < 3) s.Exec(SchemaV3);
+        if (version < 4) s.Exec(SchemaV4);
         if (version < SchemaVersion) s.Exec($"PRAGMA user_version={SchemaVersion}");
         s.Commit();
     }
@@ -49,6 +51,62 @@ public sealed class Db(string filePath)
     private const string SchemaV2 = """
         ALTER TABLE products ADD COLUMN company TEXT NOT NULL DEFAULT '';
         ALTER TABLE products ADD COLUMN size TEXT NOT NULL DEFAULT '';
+        """;
+
+    /// <summary>
+    /// Version 3: stock. Every change to a product's stock is one stock_movements row and the
+    /// stock is their sum. Sales saved before this version have no movements, so stock starts
+    /// at zero until the opening count is entered with Adjust count.
+    /// </summary>
+    private const string SchemaV3 = """
+        CREATE TABLE IF NOT EXISTS stock_ins(
+            id INTEGER PRIMARY KEY,
+            received_at TEXT NOT NULL,
+            supplier TEXT NOT NULL DEFAULT '',
+            note TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS ix_stock_ins_received ON stock_ins(received_at);
+        CREATE TABLE IF NOT EXISTS stock_in_items(
+            id INTEGER PRIMARY KEY,
+            stock_in_id INTEGER NOT NULL REFERENCES stock_ins(id),
+            product_id INTEGER NOT NULL REFERENCES products(id),
+            quantity_milli INTEGER NOT NULL CHECK(quantity_milli > 0)
+        );
+        CREATE INDEX IF NOT EXISTS ix_stock_in_items_stock_in ON stock_in_items(stock_in_id);
+        CREATE TABLE IF NOT EXISTS stock_movements(
+            id INTEGER PRIMARY KEY,
+            product_id INTEGER NOT NULL REFERENCES products(id),
+            moved_at TEXT NOT NULL,
+            change_milli INTEGER NOT NULL CHECK(change_milli <> 0),
+            kind TEXT NOT NULL CHECK(kind IN ('sale','void','stock_in','adjustment')),
+            sale_id INTEGER REFERENCES sales(id),
+            stock_in_id INTEGER REFERENCES stock_ins(id),
+            reason TEXT CHECK(reason IS NULL OR reason IN ('damaged','count_wrong','expired','other')),
+            note TEXT NOT NULL DEFAULT ''
+        );
+        -- Holds every column the stock totals and running balances read, so they never touch the table.
+        CREATE INDEX IF NOT EXISTS ix_stock_movements_product ON stock_movements(product_id, moved_at, id, change_milli, kind);
+        CREATE INDEX IF NOT EXISTS ix_stock_movements_sale ON stock_movements(sale_id) WHERE sale_id IS NOT NULL;
+        CREATE INDEX IF NOT EXISTS ix_stock_movements_stock_in ON stock_movements(stock_in_id) WHERE stock_in_id IS NOT NULL;
+        """;
+
+    /// <summary>
+    /// Version 4: price history (PR8). One row per price a product has had, written in the same
+    /// transaction as the product. Products from before this version have no rows until their
+    /// price next changes, so their "Price changed" date stays empty rather than being made up.
+    /// </summary>
+    private const string SchemaV4 = """
+        CREATE TABLE IF NOT EXISTS price_changes(
+            id INTEGER PRIMARY KEY,
+            product_id INTEGER NOT NULL REFERENCES products(id),
+            changed_at TEXT NOT NULL,
+            old_price INTEGER,
+            new_price INTEGER NOT NULL CHECK(new_price >= 0),
+            source TEXT NOT NULL CHECK(source IN ('added','edited','csv_import')),
+            file_name TEXT NOT NULL DEFAULT ''
+        );
+        CREATE INDEX IF NOT EXISTS ix_price_changes_product ON price_changes(product_id, changed_at, id);
         """;
 
     private const string Schema = """

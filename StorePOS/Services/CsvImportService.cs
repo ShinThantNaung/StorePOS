@@ -19,7 +19,6 @@ public sealed class ImportRow
     public long Price { get; init; }
     public bool SoldByWeight { get; init; }
     public ImportKind Kind { get; init; }
-    public long ExistingId { get; init; }
     public long OldPrice { get; init; }
 }
 
@@ -34,6 +33,8 @@ public sealed class ImportPreview
     public List<ImportRow> Rows { get; } = [];
     public List<ImportError> Errors { get; } = [];
     public int RowsRead { get; set; }
+    /// <summary>Recorded with every price the import adds or changes (PR8).</summary>
+    public string FileName { get; set; } = "";
     public int NewCount => Rows.Count(r => r.Kind == ImportKind.New);
     public int ChangeCount => Rows.Count(r => r.Kind == ImportKind.PriceChange);
     public int SameCount => Rows.Count(r => r.Kind == ImportKind.NoChange);
@@ -43,14 +44,16 @@ public sealed class ImportPreview
 /// PR6: columns name, category, unit, price, sold by weight (yes/no), then company and size
 /// (both optional). UTF-8 only. A row matches an existing product on name, company and size.
 /// </summary>
-public sealed class CsvImportService(Db db, ProductService products)
+public sealed class CsvImportService(Db db, ProductService products, Func<DateTime> clock)
 {
     public ImportPreview Preview(string path)
     {
         byte[] bytes;
         try { bytes = File.ReadAllBytes(path); }
         catch (Exception ex) { throw new DomainException(Loc.F("Err_Csv_Unreadable", ex.Message)); }
-        return Preview(bytes);
+        var preview = Preview(bytes);
+        preview.FileName = Path.GetFileName(path);
+        return preview;
     }
 
     public ImportPreview Preview(byte[] bytes)
@@ -90,7 +93,6 @@ public sealed class CsvImportService(Db db, ProductService products)
                 Row = rowNo, Name = row.Name, Company = row.Company, Size = row.Size, Category = row.Category,
                 Unit = row.Unit, Price = row.Price, SoldByWeight = row.SoldByWeight,
                 Kind = match == null ? ImportKind.New : match.Price == row.Price ? ImportKind.NoChange : ImportKind.PriceChange,
-                ExistingId = match?.Id ?? 0,
                 OldPrice = match?.Price ?? 0,
             });
         }
@@ -98,30 +100,37 @@ public sealed class CsvImportService(Db db, ProductService products)
         return preview;
     }
 
-    /// <summary>Adds new products and updates the price of existing ones, in one transaction.</summary>
+    /// <summary>
+    /// Adds new products and updates the price of existing ones, in one transaction, writing each
+    /// new or changed price to the price history with the file name.
+    /// </summary>
     public int Apply(ImportPreview preview)
     {
         var count = 0;
+        var now = clock();
         using var s = db.Write();
-        foreach (var r in preview.Rows)
+        foreach (var r in preview.Rows.Where(r => r.Kind != ImportKind.NoChange))
         {
-            if (r.Kind == ImportKind.New)
+            // Looked up again here: the product list may have changed since the preview.
+            var key = ProductService.IdentityKey(r.Name, r.Company, r.Size);
+            var current = s.Query("SELECT id, price FROM products WHERE name_key = $k",
+                x => (Id: x.GetInt64(0), Price: x.GetInt64(1)), ("$k", key)).FirstOrDefault();
+            if (current.Id == 0)
             {
-                s.Exec("""
+                var id = s.Insert("""
                     INSERT INTO products(name, name_key, category, unit, price, sold_by_weight, active, company, size)
                     VALUES($n, $k, $c, $u, $p, $w, 1, $co, $size)
-                    ON CONFLICT(name_key) DO UPDATE SET price = excluded.price
                     """,
-                    ("$n", r.Name), ("$k", ProductService.IdentityKey(r.Name, r.Company, r.Size)),
-                    ("$c", Categories.Code(r.Category)), ("$u", r.Unit), ("$p", r.Price), ("$w", r.SoldByWeight ? 1 : 0),
-                    ("$co", r.Company), ("$size", r.Size));
-                count++;
+                    ("$n", r.Name), ("$k", key), ("$c", Categories.Code(r.Category)), ("$u", r.Unit), ("$p", r.Price),
+                    ("$w", r.SoldByWeight ? 1 : 0), ("$co", r.Company), ("$size", r.Size));
+                ProductService.RecordPriceChange(s, id, null, r.Price, PriceSource.CsvImport, preview.FileName, now);
             }
-            else if (r.Kind == ImportKind.PriceChange)
+            else if (current.Price != r.Price)
             {
-                s.Exec("UPDATE products SET price = $p WHERE id = $id", ("$p", r.Price), ("$id", r.ExistingId));
-                count++;
+                s.Exec("UPDATE products SET price = $p WHERE id = $id", ("$p", r.Price), ("$id", current.Id));
+                ProductService.RecordPriceChange(s, current.Id, current.Price, r.Price, PriceSource.CsvImport, preview.FileName, now);
             }
+            count++;
         }
         s.Commit();
         return count;
