@@ -130,7 +130,7 @@ The app knows how much of each product is in the shop. Stock goes up when a deli
 5. **ST5:** Saving a sale takes its quantities out of stock, and voiding a sale puts them back (TX6, TX7). This happens in the same step as the sale or void.
 6. **ST6:** Adjust count: when the shelf count does not match the app, the user enters the number counted and picks a reason (damaged or leaking, count was wrong, expired, other) with an optional note. The app records the difference.
 7. **ST7:** Selecting a product shows its stock movements, newest first: date and time, what happened (sale, voided sale, stock in, adjustment), the change, and the stock left after it.
-8. **ST8:** A sale is allowed even if the app shows too little stock, because the shelf may be right and the app wrong. The product is then marked as out of stock until stock is recorded or the count is corrected.
+8. **ST8:** A sale cannot take more than the app shows in stock, so stock never goes below zero. The sale screen names the product and how much the app has. If the shelf really has more, the count is corrected with Adjust count first, then the sale is saved. A product at zero is marked as out of stock until stock is recorded or the count is corrected.
 9. **ST9:** Stock movements are never edited or deleted. A mistake is fixed with an adjustment.
 10. **ST10:** First-time setup: before go-live, each product's opening stock is entered once with Adjust count (reason "count was wrong").
 

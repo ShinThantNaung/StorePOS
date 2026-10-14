@@ -133,11 +133,14 @@ public static class DemoData
                 current = day.AddMinutes(minute);
                 if (day == today && current > s.Clock()) current = s.Clock().AddMinutes(-(count - n) * 7);
 
+                // A sale never takes more than is in stock, so a product that runs out stays at zero.
                 var lines = Enumerable.Range(0, rng.Next(1, 4))
                     .Select(_ => list[rng.Next(list.Count)]).DistinctBy(p => p.Id)
                     .Select(p => new SaleLineInput(p.Id, p.FullName, p.Unit, p.SoldByWeight,
-                        p.SoldByWeight ? rng.Next(1, 10) * 0.5m : rng.Next(1, 5), p.Price, p.Price))
+                        Math.Min(stock.OnHand(p.Id), p.SoldByWeight ? rng.Next(1, 10) * 0.5m : rng.Next(1, 5)), p.Price, p.Price))
+                    .Where(l => l.Quantity > 0)
                     .ToList();
+                if (lines.Count == 0) continue;
                 var total = lines.Sum(l => l.LineTotal);
                 long? customer = null;
                 long tendered;

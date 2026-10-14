@@ -389,6 +389,7 @@
   <data name="Err_StockQtyWhole" xml:space="preserve"><value>{0} is counted in whole numbers only.</value></data>
   <data name="Err_ProductNotFound" xml:space="preserve"><value>This product could not be found.</value></data>
   <data name="Err_Adjust_NoChange" xml:space="preserve"><value>The count is the same as the app. Nothing to save.</value></data>
+  <data name="Err_NotEnoughStock" xml:space="preserve"><value>Not enough {0} in stock: the app has {1}.</value></data>
   <!-- Price history (PR8, PR9) -->
   <data name="Prices_History" xml:space="preserve"><value>Price history</value></data>
   <data name="Col_PriceChanged" xml:space="preserve"><value>Price changed</value></data>

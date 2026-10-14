@@ -389,6 +389,7 @@
   <data name="Err_StockQtyWhole" xml:space="preserve"><value>{0} ကို ကိန်းပြည့်ဖြင့်သာ ရေတွက်သည်။</value></data>
   <data name="Err_ProductNotFound" xml:space="preserve"><value>ဤပစ္စည်းကို ရှာမတွေ့ပါ။</value></data>
   <data name="Err_Adjust_NoChange" xml:space="preserve"><value>အက်ပ်ရှိ အရေအတွက်နှင့် တူနေသည်။ သိမ်းစရာ မရှိပါ။</value></data>
+  <data name="Err_NotEnoughStock" xml:space="preserve"><value>{0} လက်ကျန် မလုံလောက်ပါ - အက်ပ်တွင် {1} သာ ရှိသည်။</value></data>
   <!-- Price history (PR8, PR9) -->
   <data name="Prices_History" xml:space="preserve"><value>ဈေးနှုန်း မှတ်တမ်း</value></data>
   <data name="Col_PriceChanged" xml:space="preserve"><value>ဈေး ပြောင်းသည့်နေ့</value></data>

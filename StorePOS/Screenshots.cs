@@ -42,6 +42,8 @@ internal static class Screenshots
         sales.PaidText = "50,000";
         sales.SelectedCustomer = sales.Customers.Skip(1).First();
         Shot(window.Root, folder, "01-sales");
+        sales.Cart[0].QtyText = "500";
+        Shot(window.Root, folder, "01b-sales-no-stock");
 
         main.Navigate(Section.Prices);
         main.PricesPage.Selected = null;

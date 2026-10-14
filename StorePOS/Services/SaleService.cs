@@ -30,6 +30,17 @@ public sealed class SaleService(Db db, Func<DateTime> clock)
 
         var now = clock();
         using var s = db.Write();
+
+        // ST8: a sale may not take more than the app has in stock. If the shelf has more, the count
+        // is corrected first. Two cart lines of one product (one at a changed price) count together.
+        foreach (var g in lines.GroupBy(l => l.ProductId))
+        {
+            var have = StockService.OnHandMilli(s, g.Key);
+            if (g.Sum(l => Fmt.ToMilli(l.Quantity)) > have)
+                throw new DomainException(Loc.F("Err_NotEnoughStock", g.First().Name,
+                    Units.Count(Fmt.FromMilli(Math.Max(0, have)), g.First().Unit)));
+        }
+
         var saleId = s.Insert("""
             INSERT INTO sales(sold_at, total, amount_paid, cash_tendered, customer_id, status)
             VALUES($t, $total, $paid, $tendered, $c, 'saved')
@@ -47,7 +58,7 @@ public sealed class SaleService(Db db, Func<DateTime> clock)
                 ("$s", saleId), ("$p", l.ProductId), ("$n", l.Name), ("$u", l.Unit),
                 ("$w", l.SoldByWeight ? 1 : 0), ("$q", Fmt.ToMilli(l.Quantity)),
                 ("$up", l.UnitPrice), ("$lp", l.ListPrice), ("$lt", l.LineTotal));
-            // ST5/ST8: stock goes down even below zero; the shelf may be right and the app wrong.
+            // ST5: stock goes down by what was sold.
             s.Exec("""
                 INSERT INTO stock_movements(product_id, moved_at, change_milli, kind, sale_id)
                 VALUES($p, $t, $q, 'sale', $s)

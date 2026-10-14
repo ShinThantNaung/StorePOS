@@ -268,13 +268,13 @@ Stock is counted per product in the product's own unit (bottles, bags, packs, kg
 | Stock in recorded | plus the quantity of each line | Yes, from the Record stock in dialog |
 | Count adjusted | plus or minus the difference | Yes, from the Adjust stock count dialog |
 
-A sale is still allowed when stock would go below zero (the shelf may be right and the app wrong). The product then shows "OUT" and a negative number until someone records a stock in or adjusts the count.
+A sale cannot take stock below zero. While a cart line (or two lines of the same product together) asks for more than the app has, "Save sale" is disabled and the footer says "Not enough Glyphosate herbicide 1 L in stock: the app has 3 bottles." If the shelf really has more, the user corrects the count with Adjust count and comes back to Sales; the cart is kept. A product at zero shows "OUT".
 
 **Current stock view** (sidebar item Stock)
 - Toolbar row 1: joined toggle "Current stock" (selected) / "Stock-in history" (min 150 each). On the right: "Adjust count" (default) and "Record stock in" (primary, 48 tall, min 200).
 - Toolbar row 2: label "Search" + text box (300), label "Category" + dropdown (190: All, Pesticide, Herbicide, Fertilizer, Seed, Other), label "Show" + toggles "All" / "Out of stock", and on the right "Showing N of M, K out of stock".
 - Below, two panels: stock table `*` | gap 16 | history panel `540`.
-- Stock table: Product `*` | Unit `76` | In stock `120` (right, semibold) | Last stock in `128` (date). A product at zero or below shows an "OUT" tag (1 px `Text` border, radius 2, semibold) before the number. Clicking a row selects it (`AccentTint`) and fills the history panel.
+- Stock table: Product `*` | Unit `76` | In stock `120` (right, semibold) | Last stock in `128` (date). A product at zero shows an "OUT" tag (1 px `Text` border, radius 2, semibold) before the number. Clicking a row selects it (`AccentTint`) and fills the history panel.
 - History panel:
   - White header panel (12 × 16 padding): product name (20 semibold), then two columns: "In stock now" with the number and unit (28 semibold), and "Last stock in" with the date and time (semibold) and "+36 from Shwe Pyi Trading".
   - Heading "Stock movements, newest first" (18 semibold).
@@ -341,7 +341,7 @@ A sale is still allowed when stock would go below zero (the shelf may be right a
 - Add / Edit product dialog (name, category, unit, price, sold by weight, active). Unit is a dropdown, never free text, with only "Bottle" (ပုလင်း) and "Bag" (အိတ်); a new product starts on Bottle. The unit is stored as the code `bottle` or `bag` and shown in the interface language everywhere (Sales, cart, Prices, Stock, CSV preview, reports). A product saved earlier with another typed unit keeps showing that unit; editing it asks for Bottle or Bag.
 - New customer dialog (name, address, optional phone).
 - Backup and restore screen (daily backup folder, "Back up now", "Restore from copy").
-- Reverse repayment dialog (can reuse the Void sale dialog pattern).- Stock shown on the Sales screen (an "In stock" column in the product list, and a warning when a sale takes stock below zero).
+- Reverse repayment dialog (can reuse the Void sale dialog pattern).- Stock shown on the Sales screen before adding (an "In stock" column in the product list). Today the stock appears only in the footer message when the cart asks for too much.
 
 ## 11. Suggested WPF structure
 

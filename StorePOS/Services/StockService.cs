@@ -42,7 +42,16 @@ public sealed class StockService(Db db, ProductService products, Func<DateTime> 
         return Fmt.FromMilli(OnHandMilli(s, productId));
     }
 
-    private static long OnHandMilli(Session s, long productId) =>
+    /// <summary>Every product's stock, for the Sales screen. A product with no movements is left out (0).</summary>
+    public Dictionary<long, decimal> OnHandAll()
+    {
+        using var s = db.Read();
+        return s.Query("SELECT product_id, SUM(change_milli) FROM stock_movements GROUP BY product_id",
+                r => (Id: r.GetInt64(0), Milli: r.GetInt64(1)))
+            .ToDictionary(x => x.Id, x => Fmt.FromMilli(x.Milli));
+    }
+
+    internal static long OnHandMilli(Session s, long productId) =>
         s.Scalar<long>("SELECT COALESCE(SUM(change_milli), 0) FROM stock_movements WHERE product_id = $p",
             ("$p", productId));
 

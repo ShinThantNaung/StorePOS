@@ -81,6 +81,7 @@ public sealed class SalesViewModel : ObservableObject, IPage
     private string _nameKey = "";
     private string _companyKey = "";
     private List<SizeOption> _sizes = [];
+    private Dictionary<long, decimal> _onHand = [];
     private SizeOption? _size;
     private ProductRow? _selectedProduct;
     private string _quantityText = "1";
@@ -117,6 +118,9 @@ public sealed class SalesViewModel : ObservableObject, IPage
         Sizes = SizeOption.From(_products);
         SelectedProduct = _products.FirstOrDefault(p => p.Id == selectedId);
         ReloadCustomers(SelectedCustomer?.Id);
+        // Stock may have been counted or received since the cart was filled.
+        _onHand = _s.Stock.OnHandAll();
+        Recalc();
     }
 
     private void ReloadCustomers(long? selectId)
@@ -261,12 +265,20 @@ public sealed class SalesViewModel : ObservableObject, IPage
                     return Loc.F(bad.Product.SoldByWeight ? "Sales_FixQtyDecimal" : "Sales_FixQtyWhole", bad.Name);
                 return Loc.F("Sales_FixPrice", bad.Name);
             }
+            // ST8: the cart may not take more than the app has; lines of one product count together.
+            var shortLine = Cart.GroupBy(l => l.Product.Id)
+                .FirstOrDefault(g => g.Sum(l => l.Qty!.Value) > OnHand(g.Key))?.First();
+            if (shortLine != null)
+                return Loc.F("Err_NotEnoughStock", shortLine.Name,
+                    Units.Count(Math.Max(0, OnHand(shortLine.Product.Id)), shortLine.Product.Unit));
             if (string.IsNullOrWhiteSpace(PaidText)) return Loc.Get("Sales_TypePaid");
             if (Paid == null) return Loc.Get("Sales_PaidNotNumber");
             if (Owed > 0 && SelectedCustomer?.Id == null) return Loc.Get("Sales_ChooseCustomer");
             return "";
         }
     }
+
+    private decimal OnHand(long productId) => _onHand.GetValueOrDefault(productId);
 
     public bool CanSave => Cart.Count > 0 && Problem.Length == 0;
 
@@ -296,6 +308,7 @@ public sealed class SalesViewModel : ObservableObject, IPage
         if (!CanSave) return;
         var total = Total;
         var id = _s.Sales.Save(Cart.Select(l => l.ToInput()).ToList(), Paid!.Value, SelectedCustomer?.Id);
+        _onHand = _s.Stock.OnHandAll();
         Cart.Clear();
         _paidText = "";
         OnPropertyChanged(nameof(PaidText));
