@@ -13,6 +13,7 @@
   <data name="Nav_Backup" xml:space="preserve"><value>အရန်သိမ်းခြင်း</value></data>
   <data name="Search" xml:space="preserve"><value>ရှာရန်</value></data>
   <data name="Search_ProductPlaceholder" xml:space="preserve"><value>အမည်၏ တစ်စိတ်တစ်ပိုင်းကို ရိုက်ပါ</value></data>
+  <data name="Search_CompanyPlaceholder" xml:space="preserve"><value>ကုမ္ပဏီအမည်ကို ရိုက်ပါ</value></data>
   <data name="Search_CustomerPlaceholder" xml:space="preserve"><value>အမည် သို့မဟုတ် ရွာ</value></data>
   <data name="Ks" xml:space="preserve"><value>ကျပ်</value></data>
   <data name="Fmt_Ks" xml:space="preserve"><value>{0} ကျပ်</value></data>
@@ -37,6 +38,8 @@
   <data name="Cat_Seed" xml:space="preserve"><value>မျိုးစေ့</value></data>
   <data name="Cat_Other" xml:space="preserve"><value>အခြား</value></data>
   <data name="Col_Name" xml:space="preserve"><value>အမည်</value></data>
+  <data name="Col_Company" xml:space="preserve"><value>ကုမ္ပဏီ</value></data>
+  <data name="Col_ProductSize" xml:space="preserve"><value>အရွယ်အစား</value></data>
   <data name="Col_Unit" xml:space="preserve"><value>ယူနစ်</value></data>
   <data name="Col_PriceKs" xml:space="preserve"><value>ဈေးနှုန်း (ကျပ်)</value></data>
   <data name="Col_Item" xml:space="preserve"><value>ပစ္စည်း</value></data>
@@ -106,6 +109,8 @@
   <data name="Prices_Edit" xml:space="preserve"><value>ပြင်မည်</value></data>
   <data name="Prices_Import" xml:space="preserve"><value>CSV ထည့်မည်</value></data>
   <data name="Prices_Category" xml:space="preserve"><value>အမျိုးအစား</value></data>
+  <data name="Filter_Company" xml:space="preserve"><value>ကုမ္ပဏီ</value></data>
+  <data name="Filter_Size" xml:space="preserve"><value>အရွယ်အစား</value></data>
   <data name="Prices_Showing" xml:space="preserve"><value>ပစ္စည်း {1} မျိုးအနက် {0} မျိုး ပြထားသည်</value></data>
   <data name="Prices_Empty" xml:space="preserve"><value>ကိုက်ညီသော ပစ္စည်း မရှိပါ။ စာလုံးပေါင်းကို စစ်ပါ၊ သို့မဟုတ် အားလုံး ကိုရွေးပါ။</value></data>
   <data name="Prices_UnitWeight" xml:space="preserve"><value>{0} (အလေးချိန်ဖြင့်ရောင်း)</value></data>
@@ -113,8 +118,12 @@
   <data name="Product_AddTitle" xml:space="preserve"><value>ပစ္စည်းအသစ် ထည့်ရန်</value></data>
   <data name="Product_EditTitle" xml:space="preserve"><value>ပစ္စည်း ပြင်ရန်</value></data>
   <data name="Product_Name" xml:space="preserve"><value>အမည်</value></data>
+  <data name="Product_Company" xml:space="preserve"><value>ကုမ္ပဏီ</value></data>
+  <data name="Product_CompanyPlaceholder" xml:space="preserve"><value>ထုတ်လုပ်သည့် ကုမ္ပဏီ (မထည့်လည်း ရသည်)</value></data>
+  <data name="Product_Size" xml:space="preserve"><value>အရွယ်အစား</value></data>
+  <data name="Product_SizePlaceholder" xml:space="preserve"><value>ဥပမာ 1 လီတာ၊ 500 cc (မထည့်လည်း ရသည်)</value></data>
   <data name="Product_Category" xml:space="preserve"><value>အမျိုးအစား</value></data>
-  <data name="Product_Unit" xml:space="preserve"><value>ယူနစ် သို့မဟုတ် အထုပ်အရွယ်</value></data>
+  <data name="Product_Unit" xml:space="preserve"><value>ယူနစ်</value></data>
   <data name="Product_UnitPlaceholder" xml:space="preserve"><value>ဥပမာ ပုလင်း၊ အိတ်၊ ကီလို</value></data>
   <data name="Product_Price" xml:space="preserve"><value>ဈေးနှုန်း</value></data>
   <data name="Product_SoldByWeight" xml:space="preserve"><value>အလေးချိန်ဖြင့်ရောင်း (ဒသမ ရနိုင်၊ ဥပမာ 2.5 ကီလို)</value></data>
@@ -129,7 +138,7 @@
   <data name="Import_Step2" xml:space="preserve"><value>2။ အတန်းများကို စစ်ပါ</value></data>
   <data name="Import_File" xml:space="preserve"><value>ဖိုင်</value></data>
   <data name="Import_ChooseFile" xml:space="preserve"><value>ဖိုင် ရွေးမည်…</value></data>
-  <data name="Import_FileHint" xml:space="preserve"><value>ကော်လံများ - name, category, unit, price, sold by weight (yes သို့မဟုတ် no)။ မြန်မာအမည်များ မှန်ကန်စွာ ဝင်လာစေရန် ဖိုင်ကို “CSV UTF-8” အဖြစ် သိမ်းပါ။</value></data>
+  <data name="Import_FileHint" xml:space="preserve"><value>ကော်လံများ - name, category, unit, price, sold by weight (yes သို့မဟုတ် no), company, size။ company နှင့် size ကို ချန်ထားနိုင်သည်။ မြန်မာအမည်များ မှန်ကန်စွာ ဝင်လာစေရန် ဖိုင်ကို “CSV UTF-8” အဖြစ် သိမ်းပါ။</value></data>
   <data name="Import_Summary" xml:space="preserve"><value>{0} အတန်း ဖတ်ပြီး - ပစ္စည်းအသစ် {1}၊ ဈေးပြောင်း {2}၊ မပြောင်း {3}၊ အမှား {4}</value></data>
   <data name="Import_RowsTitle" xml:space="preserve"><value>ထည့်မည့် အတန်းများ ({0})</value></data>
   <data name="Import_ErrorsTitle" xml:space="preserve"><value>အမှားပါသော အတန်းများ ({0})</value></data>
@@ -144,7 +153,7 @@
   <data name="Err_Csv_Unreadable" xml:space="preserve"><value>ဖိုင်ကို ဖွင့်၍ မရပါ - {0}</value></data>
   <data name="Err_Csv_NotUtf8" xml:space="preserve"><value>ဖိုင်ကို CSV UTF-8 အဖြစ် မသိမ်းထားသဖြင့် မြန်မာအမည်များ မှားနိုင်သည်။ Excel တွင် Save As ကိုနှိပ်၍ “CSV UTF-8” ကိုရွေးပြီး ထပ်ကြိုးစားပါ။</value></data>
   <data name="Err_Csv_Empty" xml:space="preserve"><value>ဖိုင်တွင် ထည့်စရာ အတန်း မရှိပါ။</value></data>
-  <data name="Err_Csv_Columns" xml:space="preserve"><value>ဤအတန်းတွင် ကော်လံ {0} ခု ရှိသည်။ name, category, unit, price, sold by weight ဟူ၍ 5 ခု လိုသည်။</value></data>
+  <data name="Err_Csv_Columns" xml:space="preserve"><value>ဤအတန်းတွင် ကော်လံ {0} ခု ရှိသည်။ name, category, unit, price, sold by weight, company, size ဟူ၍ 5 ခုမှ 7 ခုအထိ လိုသည်။</value></data>
   <data name="Err_Csv_NameEmpty" xml:space="preserve"><value>အမည် မရှိပါ။</value></data>
   <data name="Err_Csv_Category" xml:space="preserve"><value>အမျိုးအစား “{0}” ကို လက်မခံပါ။ Pesticide, Herbicide, Fertilizer, Seed သို့မဟုတ် Other ကို သုံးပါ။</value></data>
   <data name="Err_Csv_UnitEmpty" xml:space="preserve"><value>ယူနစ် မရှိပါ။</value></data>
@@ -153,7 +162,7 @@
   <data name="Err_Csv_PriceNotNumber" xml:space="preserve"><value>ဈေးနှုန်း “{0}” သည် ဂဏန်း မဟုတ်ပါ။</value></data>
   <data name="Err_Csv_PriceDecimal" xml:space="preserve"><value>ဈေးနှုန်း “{0}” တွင် ဒသမ ပါသည်။ ကျပ်ကိန်းပြည့် သုံးပါ။</value></data>
   <data name="Err_Csv_Weight" xml:space="preserve"><value>Sold by weight “{0}” သည် yes သို့မဟုတ် no ဖြစ်ရမည်။</value></data>
-  <data name="Err_Csv_Duplicate" xml:space="preserve"><value>ဤအမည် အတန်း {0} တွင် ရှိပြီးသား ဖြစ်သည်။</value></data>
+  <data name="Err_Csv_Duplicate" xml:space="preserve"><value>ဤအမည်၊ ကုမ္ပဏီနှင့် အရွယ်အစား အတန်း {0} တွင် ရှိပြီးသား ဖြစ်သည်။</value></data>
   <data name="Debts_TotalOwed" xml:space="preserve"><value>ဆိုင်သို့ ပေးရန်ကျန် စုစုပေါင်း</value></data>
   <data name="Debts_StillOweCount" xml:space="preserve"><value>အကြွေးကျန်သော ဝယ်သူ</value></data>
   <data name="Debts_Show" xml:space="preserve"><value>ပြရန်</value></data>
@@ -281,9 +290,9 @@
   <data name="Language_Restart" xml:space="preserve"><value>ဘာသာစကား ပြောင်းရန် အက်ပ်ကို ပိတ်ပြီး ပြန်ဖွင့်ပါ။</value></data>
   <data name="Err_Unexpected" xml:space="preserve"><value>တစ်ခုခု မှားသွားသည် - {0}။ ဘာမျှ မသိမ်းရသေးပါ။ ထပ်ကြိုးစားပါ။ ဆက်ဖြစ်နေလျှင် လုပ်ခဲ့သည်ကို မှတ်ထားပါ။</value></data>
   <data name="Err_NameRequired" xml:space="preserve"><value>အမည် ရိုက်ပါ။</value></data>
-  <data name="Err_UnitRequired" xml:space="preserve"><value>ယူနစ် သို့မဟုတ် အထုပ်အရွယ်ကို ရိုက်ပါ။</value></data>
+  <data name="Err_UnitRequired" xml:space="preserve"><value>ယူနစ်ကို ရိုက်ပါ။</value></data>
   <data name="Err_PriceInvalid" xml:space="preserve"><value>ဈေးနှုန်းသည် ကျပ်ကိန်းပြည့် ဖြစ်ရမည်။</value></data>
-  <data name="Err_NameExists" xml:space="preserve"><value>ဤအမည်ဖြင့် ပစ္စည်း ရှိပြီးသား ဖြစ်သည်။</value></data>
+  <data name="Err_NameExists" xml:space="preserve"><value>ဤအမည်၊ ကုမ္ပဏီနှင့် အရွယ်အစားဖြင့် ပစ္စည်း ရှိပြီးသား ဖြစ်သည်။</value></data>
   <data name="Err_CustomerExists" xml:space="preserve"><value>ဤအမည်နှင့် လိပ်စာဖြင့် ဝယ်သူ ရှိပြီးသား ဖြစ်သည်။ စာရင်းထဲမှ ရွေးပါ။</value></data>
   <data name="Err_CartEmpty" xml:space="preserve"><value>စာရင်း ဗလာ ဖြစ်နေသည်။</value></data>
   <data name="Err_QtyInvalid" xml:space="preserve"><value>{0} ၏ အရေအတွက်ကို စစ်ပါ။</value></data>

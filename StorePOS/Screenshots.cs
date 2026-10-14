@@ -78,15 +78,15 @@ internal static class Screenshots
         var repay = new RepaymentDialog(owing);
         repay.AmountText = "20,000";
         DialogShot(folder, "10-repayment", repay);
-        DialogShot(folder, "11-product", new ProductDialog(s.Products.List(true).First(p => p.SoldByWeight)));
+        DialogShot(folder, "11-product", new ProductDialog(s.Products.List(true).First(p => p.SoldByWeight && p.Company.Length > 0)));
         DialogShot(folder, "12-customer", new CustomerDialog(null));
 
         var csv = Path.Combine(s.DataFolder, "sample-prices.csv");
         File.WriteAllText(csv, """
-            name,category,unit,price,sold by weight
-            Glyphosate herbicide 1 L,Herbicide,bottle,16000,no
-            Paraquat herbicide 500 ml,Herbicide,bottle,8500,no
-            Atrazine herbicide 1 kg,Herbicide,pack,14000,no
+            name,category,unit,price,sold by weight,company,size
+            Glyphosate herbicide,Herbicide,bottle,16000,no,Green Valley,1 L
+            Paraquat herbicide,Herbicide,bottle,8500,no,Shwe Lal,500 ml
+            Atrazine herbicide,Herbicide,pack,14000,no,Golden Harvest,1 kg
             Urea fertilizer (loose),Fertilizer,kg,2300,yes
             "Hybrid maize seed, 2 kg pack",Seed,pack,"28,000",no
             Cypermethrin insecticide 250 ml,Pesticide,bottle,12.5OO,no

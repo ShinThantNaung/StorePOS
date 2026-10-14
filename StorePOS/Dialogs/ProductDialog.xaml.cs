@@ -17,6 +17,8 @@ public partial class ProductDialog : Window
         CategoryBox.ItemsSource = Categories.All.Select(c => new { Label = Categories.Display(c), Value = c }).ToList();
         CategoryBox.SelectedValue = existing?.Category ?? Category.Pesticide;
         NameBox.Text = existing?.Name ?? "";
+        CompanyBox.Text = existing?.Company ?? "";
+        SizeBox.Text = existing?.Size ?? "";
         UnitBox.Text = existing?.Unit ?? "";
         PriceBox.Text = existing == null ? "" : Fmt.Money(existing.Price);
         WeightBox.IsChecked = existing?.SoldByWeight ?? false;
@@ -41,7 +43,7 @@ public partial class ProductDialog : Window
         {
             var ok = Dialogs.Confirm(
                 Loc.Get("Deactivate_Title"),
-                Loc.F("Deactivate_Text", _existing.Name),
+                Loc.F("Deactivate_Text", _existing.FullName),
                 Loc.Get("Deactivate_Keep"),
                 Loc.Get("Deactivate_Action"));
             if (!ok) return;
@@ -53,6 +55,8 @@ public partial class ProductDialog : Window
             {
                 Id = _existing?.Id ?? 0,
                 Name = NameBox.Text,
+                Company = CompanyBox.Text,
+                Size = SizeBox.Text,
                 Category = (Category)CategoryBox.SelectedValue,
                 Unit = UnitBox.Text,
                 Price = price,

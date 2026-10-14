@@ -36,11 +36,25 @@ public sealed class Product
 {
     public long Id { get; set; }
     public string Name { get; set; } = "";
+    /// <summary>Who makes it, for example "Green Valley". Optional.</summary>
+    public string Company { get; set; } = "";
+    /// <summary>For example "1 L" or "500 cc". Optional.</summary>
+    public string Size { get; set; } = "";
     public Category Category { get; set; }
     public string Unit { get; set; } = "";
     public long Price { get; set; }
     public bool SoldByWeight { get; set; }
     public bool Active { get; set; } = true;
+
+    /// <summary>The name as copied into sales and shown in reports.</summary>
+    public string FullName => FormatFullName(Name, Size, Company);
+
+    /// <summary>"Glyphosate 1 L (Green Valley)"; just the name when size and company are empty.</summary>
+    public static string FormatFullName(string name, string size, string company)
+    {
+        var text = size.Length == 0 ? name : $"{name} {size}";
+        return company.Length == 0 ? text : $"{text} ({company})";
+    }
 }
 
 public sealed class Customer

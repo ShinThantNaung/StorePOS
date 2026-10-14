@@ -73,5 +73,8 @@ public static class Fmt
         string.Join(' ', (text ?? "").Normalize(NormalizationForm.FormC)
             .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)).ToLowerInvariant();
 
+    /// <summary>Key for matching sizes: "1 L", "1l" and "၁ L" are the same size.</summary>
+    public static string SizeKey(string? text) => NormalizeDigits(SearchKey(text));
+
     public static DateTime WeekStart(DateTime d) => d.Date.AddDays(-(((int)d.DayOfWeek + 6) % 7));
 }

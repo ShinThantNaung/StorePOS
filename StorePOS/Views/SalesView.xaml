@@ -23,18 +23,49 @@
 
             <TextBlock Style="{StaticResource H20}" Text="{l:Tr Sales_Products}" />
 
-            <DockPanel Grid.Row="2">
-                <TextBlock Style="{StaticResource Label}" Text="{l:Tr Search}" Margin="0,0,8,0" />
-                <TextBox x:Name="SearchBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="128" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="8" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource Label}" Text="{l:Tr Search}" />
+                <TextBox x:Name="SearchBox" Grid.Column="2" Grid.ColumnSpan="5" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                          l:Ui.Placeholder="{l:Tr Search_ProductPlaceholder}"
                          AutomationProperties.Name="{l:Tr Search}" PreviewKeyDown="SearchBox_PreviewKeyDown" />
-            </DockPanel>
+
+                <TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="{l:Tr Filter_Company}" />
+                <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding CompanyText, UpdateSourceTrigger=PropertyChanged}"
+                         AutomationProperties.Name="{l:Tr Filter_Company}" PreviewKeyDown="SearchBox_PreviewKeyDown" />
+                <TextBlock Grid.Row="2" Grid.Column="4" Style="{StaticResource Label}" Text="{l:Tr Filter_Size}" />
+                <ComboBox Grid.Row="2" Grid.Column="6" ItemsSource="{Binding Sizes}" SelectedItem="{Binding SelectedSize}"
+                          DisplayMemberPath="Display" AutomationProperties.Name="{l:Tr Filter_Size}" />
+            </Grid>
 
             <DataGrid x:Name="ProductGrid" Grid.Row="4" ItemsSource="{Binding ProductsView}"
                       SelectedItem="{Binding SelectedProduct}" MouseDoubleClick="ProductGrid_MouseDoubleClick"
                       AutomationProperties.Name="{l:Tr Sales_Products}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="{l:Tr Col_Name}" Binding="{Binding Name}" Width="*" ElementStyle="{StaticResource CellText}" />
+                    <DataGridTemplateColumn Header="{l:Tr Col_Name}" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="10,8" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding NameAndSize}" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding Company}" TextWrapping="Wrap" Foreground="{StaticResource TextSecondary}"
+                                               Visibility="{Binding Company, Converter={StaticResource BoolToVisible}}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="{l:Tr Col_Unit}" Binding="{Binding Unit}" Width="Auto" MinWidth="84" ElementStyle="{StaticResource CellText}" />
                     <DataGridTextColumn Header="{l:Tr Col_PriceKs}" Binding="{Binding PriceText}" Width="Auto" MinWidth="100"
                                         ElementStyle="{StaticResource CellNum}" HeaderStyle="{StaticResource NumHeader}" />

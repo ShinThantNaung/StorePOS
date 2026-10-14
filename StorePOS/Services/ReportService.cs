@@ -49,7 +49,7 @@ public sealed class ReportService(Db db)
     {
         using var s = db.Read();
         return s.Query("""
-            SELECT p.id, p.name, p.unit, p.sold_by_weight, COALESCE(x.qty, 0), COALESCE(x.amt, 0)
+            SELECT p.id, p.name, p.unit, p.sold_by_weight, COALESCE(x.qty, 0), COALESCE(x.amt, 0), p.size, p.company
             FROM products p
             LEFT JOIN (SELECT si.product_id, SUM(si.quantity_milli) AS qty, SUM(si.line_total) AS amt
                        FROM sale_items si JOIN sales s ON s.id = si.sale_id
@@ -59,7 +59,8 @@ public sealed class ReportService(Db db)
             """,
             r => new ProductSales
             {
-                ProductId = r.GetInt64(0), Name = r.GetString(1), Unit = r.GetString(2),
+                ProductId = r.GetInt64(0), Name = Product.FormatFullName(r.GetString(1), r.GetString(6), r.GetString(7)),
+                Unit = r.GetString(2),
                 SoldByWeight = r.Bool(3), Quantity = Fmt.FromMilli(r.GetInt64(4)), Amount = r.GetInt64(5),
             },
             ("$f", Fmt.DbTime(from)), ("$t", Fmt.DbTime(toExclusive)));

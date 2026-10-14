@@ -12,6 +12,8 @@ public sealed class ImportRow
 {
     public int Row { get; init; }
     public string Name { get; init; } = "";
+    public string Company { get; init; } = "";
+    public string Size { get; init; } = "";
     public Category Category { get; init; }
     public string Unit { get; init; } = "";
     public long Price { get; init; }
@@ -37,7 +39,10 @@ public sealed class ImportPreview
     public int SameCount => Rows.Count(r => r.Kind == ImportKind.NoChange);
 }
 
-/// <summary>PR6: columns name, category, unit, price, sold by weight (yes/no). UTF-8 only.</summary>
+/// <summary>
+/// PR6: columns name, category, unit, price, sold by weight (yes/no), then company and size
+/// (both optional). UTF-8 only. A row matches an existing product on name, company and size.
+/// </summary>
 public sealed class CsvImportService(Db db, ProductService products)
 {
     public ImportPreview Preview(string path)
@@ -56,7 +61,7 @@ public sealed class CsvImportService(Db db, ProductService products)
         text = text.TrimStart('﻿');
 
         var existing = products.List(includeInactive: true)
-            .GroupBy(p => Fmt.SearchKey(p.Name)).ToDictionary(g => g.Key, g => g.First());
+            .GroupBy(p => ProductService.IdentityKey(p.Name, p.Company, p.Size)).ToDictionary(g => g.Key, g => g.First());
         var preview = new ImportPreview();
         var seen = new Dictionary<string, int>();
 
@@ -69,7 +74,7 @@ public sealed class CsvImportService(Db db, ProductService products)
             var error = Validate(cells, out var row);
             if (error == null)
             {
-                var key = Fmt.SearchKey(row!.Name);
+                var key = ProductService.IdentityKey(row!.Name, row.Company, row.Size);
                 if (seen.TryGetValue(key, out var firstRow)) error = Loc.F("Err_Csv_Duplicate", firstRow);
                 else seen[key] = rowNo;
             }
@@ -79,11 +84,11 @@ public sealed class CsvImportService(Db db, ProductService products)
                 continue;
             }
 
-            var match = existing.GetValueOrDefault(Fmt.SearchKey(row!.Name));
+            var match = existing.GetValueOrDefault(ProductService.IdentityKey(row!.Name, row.Company, row.Size));
             preview.Rows.Add(new ImportRow
             {
-                Row = rowNo, Name = row.Name, Category = row.Category, Unit = row.Unit, Price = row.Price,
-                SoldByWeight = row.SoldByWeight,
+                Row = rowNo, Name = row.Name, Company = row.Company, Size = row.Size, Category = row.Category,
+                Unit = row.Unit, Price = row.Price, SoldByWeight = row.SoldByWeight,
                 Kind = match == null ? ImportKind.New : match.Price == row.Price ? ImportKind.NoChange : ImportKind.PriceChange,
                 ExistingId = match?.Id ?? 0,
                 OldPrice = match?.Price ?? 0,
@@ -103,12 +108,13 @@ public sealed class CsvImportService(Db db, ProductService products)
             if (r.Kind == ImportKind.New)
             {
                 s.Exec("""
-                    INSERT INTO products(name, name_key, category, unit, price, sold_by_weight, active)
-                    VALUES($n, $k, $c, $u, $p, $w, 1)
+                    INSERT INTO products(name, name_key, category, unit, price, sold_by_weight, active, company, size)
+                    VALUES($n, $k, $c, $u, $p, $w, 1, $co, $size)
                     ON CONFLICT(name_key) DO UPDATE SET price = excluded.price
                     """,
-                    ("$n", r.Name), ("$k", Fmt.SearchKey(r.Name)), ("$c", Categories.Code(r.Category)),
-                    ("$u", r.Unit), ("$p", r.Price), ("$w", r.SoldByWeight ? 1 : 0));
+                    ("$n", r.Name), ("$k", ProductService.IdentityKey(r.Name, r.Company, r.Size)),
+                    ("$c", Categories.Code(r.Category)), ("$u", r.Unit), ("$p", r.Price), ("$w", r.SoldByWeight ? 1 : 0),
+                    ("$co", r.Company), ("$size", r.Size));
                 count++;
             }
             else if (r.Kind == ImportKind.PriceChange)
@@ -129,8 +135,8 @@ public sealed class CsvImportService(Db db, ProductService products)
     {
         row = null;
         var cells = raw.Select(c => c.Trim()).ToList();
-        while (cells.Count > 5 && cells[^1].Length == 0) cells.RemoveAt(cells.Count - 1);
-        if (cells.Count < 4 || cells.Count > 5) return Loc.F("Err_Csv_Columns", cells.Count);
+        while (cells.Count > 7 && cells[^1].Length == 0) cells.RemoveAt(cells.Count - 1);
+        if (cells.Count < 4 || cells.Count > 7) return Loc.F("Err_Csv_Columns", cells.Count);
 
         var name = cells[0];
         if (name.Length == 0) return Loc.Get("Err_Csv_NameEmpty");
@@ -157,7 +163,12 @@ public sealed class CsvImportService(Db db, ProductService products)
         else if (weightText is "yes" or "y" or "true" or "1" || weightText == Fmt.SearchKey(Loc.Get("Csv_Yes"))) weight = true;
         else return Loc.F("Err_Csv_Weight", cells[4]);
 
-        row = new ImportRow { Name = name, Category = category, Unit = unit, Price = price, SoldByWeight = weight };
+        var company = cells.Count > 5 ? cells[5] : "";
+        var size = cells.Count > 6 ? cells[6] : "";
+        row = new ImportRow
+        {
+            Name = name, Company = company, Size = size, Category = category, Unit = unit, Price = price, SoldByWeight = weight,
+        };
         return null;
     }
 

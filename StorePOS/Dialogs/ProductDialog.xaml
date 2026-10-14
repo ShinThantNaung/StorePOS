@@ -29,6 +29,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="12" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="8" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -36,24 +40,32 @@
             <TextBlock Style="{StaticResource Label}" Text="{l:Tr Product_Name}" />
             <TextBox x:Name="NameBox" Grid.Column="2" AutomationProperties.Name="{l:Tr Product_Name}" />
 
-            <TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="{l:Tr Product_Category}" />
-            <ComboBox x:Name="CategoryBox" Grid.Row="2" Grid.Column="2" DisplayMemberPath="Label" SelectedValuePath="Value"
+            <TextBlock Grid.Row="2" Style="{StaticResource Label}" Text="{l:Tr Product_Company}" />
+            <TextBox x:Name="CompanyBox" Grid.Row="2" Grid.Column="2" l:Ui.Placeholder="{l:Tr Product_CompanyPlaceholder}"
+                     AutomationProperties.Name="{l:Tr Product_Company}" />
+
+            <TextBlock Grid.Row="4" Style="{StaticResource Label}" Text="{l:Tr Product_Size}" />
+            <TextBox x:Name="SizeBox" Grid.Row="4" Grid.Column="2" l:Ui.Placeholder="{l:Tr Product_SizePlaceholder}"
+                     AutomationProperties.Name="{l:Tr Product_Size}" />
+
+            <TextBlock Grid.Row="6" Style="{StaticResource Label}" Text="{l:Tr Product_Category}" />
+            <ComboBox x:Name="CategoryBox" Grid.Row="6" Grid.Column="2" DisplayMemberPath="Label" SelectedValuePath="Value"
                       AutomationProperties.Name="{l:Tr Product_Category}" />
 
-            <TextBlock Grid.Row="4" Style="{StaticResource Label}" Text="{l:Tr Product_Unit}" />
-            <TextBox x:Name="UnitBox" Grid.Row="4" Grid.Column="2" l:Ui.Placeholder="{l:Tr Product_UnitPlaceholder}"
+            <TextBlock Grid.Row="8" Style="{StaticResource Label}" Text="{l:Tr Product_Unit}" />
+            <TextBox x:Name="UnitBox" Grid.Row="8" Grid.Column="2" l:Ui.Placeholder="{l:Tr Product_UnitPlaceholder}"
                      AutomationProperties.Name="{l:Tr Product_Unit}" />
 
-            <TextBlock Grid.Row="6" Style="{StaticResource Label}" Text="{l:Tr Product_Price}" />
-            <StackPanel Grid.Row="6" Grid.Column="2" Orientation="Horizontal">
+            <TextBlock Grid.Row="10" Style="{StaticResource Label}" Text="{l:Tr Product_Price}" />
+            <StackPanel Grid.Row="10" Grid.Column="2" Orientation="Horizontal">
                 <TextBox x:Name="PriceBox" Style="{StaticResource MoneyTextBox}" Width="180" AutomationProperties.Name="{l:Tr Product_Price}" />
                 <TextBlock Style="{StaticResource Label}" Text="{l:Tr Ks}" Margin="8,0,0,0" />
             </StackPanel>
 
-            <CheckBox x:Name="WeightBox" Grid.Row="8" Grid.Column="2" AutomationProperties.Name="{l:Tr Product_SoldByWeight}">
+            <CheckBox x:Name="WeightBox" Grid.Row="12" Grid.Column="2" AutomationProperties.Name="{l:Tr Product_SoldByWeight}">
                 <TextBlock Text="{l:Tr Product_SoldByWeight}" TextWrapping="Wrap" />
             </CheckBox>
-            <CheckBox x:Name="ActiveBox" Grid.Row="9" Grid.Column="2" AutomationProperties.Name="{l:Tr Product_Active}">
+            <CheckBox x:Name="ActiveBox" Grid.Row="13" Grid.Column="2" AutomationProperties.Name="{l:Tr Product_Active}">
                 <TextBlock Text="{l:Tr Product_Active}" TextWrapping="Wrap" />
             </CheckBox>
         </Grid>

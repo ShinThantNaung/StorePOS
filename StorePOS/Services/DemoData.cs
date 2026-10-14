@@ -10,30 +10,33 @@ public static class DemoData
 {
     public static void Seed(AppServices s)
     {
-        (string Name, Category Cat, string Unit, long Price, bool Weight)[] products =
+        (string Name, string Company, string Size, Category Cat, string Unit, long Price, bool Weight)[] products =
         [
-            ("2,4-D herbicide 1 L", Category.Herbicide, "bottle", 12000, false),
-            ("Butachlor herbicide 1 L", Category.Herbicide, "bottle", 13500, false),
-            ("Chlorpyrifos insecticide 500 ml", Category.Pesticide, "bottle", 9000, false),
-            ("Cypermethrin insecticide 250 ml", Category.Pesticide, "bottle", 6000, false),
-            ("Glyphosate herbicide 1 L", Category.Herbicide, "bottle", 15000, false),
-            ("Green gram seed 1 kg pack", Category.Seed, "pack", 5000, false),
-            ("Imidacloprid insecticide 100 ml", Category.Pesticide, "bottle", 4500, false),
-            ("Knapsack sprayer 16 L", Category.Other, "piece", 45000, false),
-            ("Mancozeb fungicide 1 kg", Category.Pesticide, "pack", 11000, false),
-            ("NPK 15-15-15 fertilizer 50 kg bag", Category.Fertilizer, "bag", 125000, false),
-            ("NPK 15-15-15 fertilizer (loose)", Category.Fertilizer, "kg", 2600, true),
-            ("Paraquat herbicide 500 ml", Category.Herbicide, "bottle", 8500, false),
-            ("Potash fertilizer 50 kg bag", Category.Fertilizer, "bag", 110000, false),
-            ("Rice seed 1 kg pack", Category.Seed, "pack", 3500, false),
-            ("Urea fertilizer 50 kg bag", Category.Fertilizer, "bag", 105000, false),
-            ("Urea fertilizer (loose)", Category.Fertilizer, "kg", 2200, true),
-            ("ယူရီးယား မြေဩဇာ ၅၀ ကီလို", Category.Fertilizer, "အိတ်", 104000, false),
-            ("စပါးမျိုး ၁ ကီလို", Category.Seed, "ထုပ်", 3600, false),
+            ("2,4-D herbicide", "Green Valley", "1 L", Category.Herbicide, "bottle", 12000, false),
+            ("Butachlor herbicide", "Golden Harvest", "1 L", Category.Herbicide, "bottle", 13500, false),
+            ("Chlorpyrifos insecticide", "Green Valley", "500 ml", Category.Pesticide, "bottle", 9000, false),
+            ("Cypermethrin insecticide", "Shwe Lal", "250 ml", Category.Pesticide, "bottle", 6000, false),
+            ("Glyphosate herbicide", "Green Valley", "1 L", Category.Herbicide, "bottle", 15000, false),
+            ("Glyphosate herbicide", "Golden Harvest", "1 L", Category.Herbicide, "bottle", 14500, false),
+            ("Glyphosate herbicide", "Green Valley", "500 ml", Category.Herbicide, "bottle", 8000, false),
+            ("Green gram seed", "", "1 kg", Category.Seed, "pack", 5000, false),
+            ("Imidacloprid insecticide", "Shwe Lal", "100 ml", Category.Pesticide, "bottle", 4500, false),
+            ("Knapsack sprayer", "", "16 L", Category.Other, "piece", 45000, false),
+            ("Mancozeb fungicide", "Golden Harvest", "1 kg", Category.Pesticide, "pack", 11000, false),
+            ("NPK 15-15-15 fertilizer", "Golden Harvest", "50 kg", Category.Fertilizer, "bag", 125000, false),
+            ("NPK 15-15-15 fertilizer (loose)", "Golden Harvest", "", Category.Fertilizer, "kg", 2600, true),
+            ("Paraquat herbicide", "Shwe Lal", "500 ml", Category.Herbicide, "bottle", 8500, false),
+            ("Potash fertilizer", "Golden Harvest", "50 kg", Category.Fertilizer, "bag", 110000, false),
+            ("Rice seed", "", "1 kg", Category.Seed, "pack", 3500, false),
+            ("Urea fertilizer", "Green Valley", "50 kg", Category.Fertilizer, "bag", 105000, false),
+            ("Urea fertilizer (loose)", "", "", Category.Fertilizer, "kg", 2200, true),
+            ("ယူရီးယား မြေဩဇာ", "ရွှေလယ်", "၅၀ ကီလို", Category.Fertilizer, "အိတ်", 104000, false),
+            ("စပါးမျိုး", "", "၁ ကီလို", Category.Seed, "ထုပ်", 3600, false),
         ];
         var list = products.Select(p => new Product
         {
-            Name = p.Name, Category = p.Cat, Unit = p.Unit, Price = p.Price, SoldByWeight = p.Weight, Active = true,
+            Name = p.Name, Company = p.Company, Size = p.Size, Category = p.Cat, Unit = p.Unit, Price = p.Price,
+            SoldByWeight = p.Weight, Active = true,
         }).ToList();
         foreach (var p in list) p.Id = s.Products.Save(p);
 
@@ -64,7 +67,7 @@ public static class DemoData
 
                 var lines = Enumerable.Range(0, rng.Next(1, 4))
                     .Select(_ => list[rng.Next(list.Count)]).DistinctBy(p => p.Id)
-                    .Select(p => new SaleLineInput(p.Id, p.Name, p.Unit, p.SoldByWeight,
+                    .Select(p => new SaleLineInput(p.Id, p.FullName, p.Unit, p.SoldByWeight,
                         p.SoldByWeight ? rng.Next(1, 10) * 0.5m : rng.Next(1, 5), p.Price, p.Price))
                     .ToList();
                 var total = lines.Sum(l => l.LineTotal);

@@ -10,6 +10,11 @@ public sealed class PricesViewModel : ObservableObject, IPage
     private readonly AppServices _s;
     private readonly BulkObservableCollection<ProductRow> _rows = [];
     private string _searchText = "";
+    private string _companyText = "";
+    private string _nameKey = "";
+    private string _companyKey = "";
+    private List<SizeOption> _sizes = [];
+    private SizeOption? _size;
     private string _category = "All";
     private ProductRow? _selected;
 
@@ -33,6 +38,7 @@ public sealed class PricesViewModel : ObservableObject, IPage
     private void Reload(long? selectId)
     {
         _rows.ReplaceAll(_s.Products.List(includeInactive: true).Select(p => new ProductRow(p)));
+        Sizes = SizeOption.From(_rows);
         Selected = _rows.FirstOrDefault(r => r.Id == selectId);
         Counts();
     }
@@ -40,7 +46,41 @@ public sealed class PricesViewModel : ObservableObject, IPage
     public string SearchText
     {
         get => _searchText;
-        set { if (Set(ref _searchText, value)) Refilter(); }
+        set
+        {
+            if (!Set(ref _searchText, value)) return;
+            _nameKey = Fmt.SearchKey(value);
+            Refilter();
+        }
+    }
+
+    public string CompanyText
+    {
+        get => _companyText;
+        set
+        {
+            if (!Set(ref _companyText, value)) return;
+            _companyKey = Fmt.SearchKey(value);
+            Refilter();
+        }
+    }
+
+    /// <summary>"All" first, then each size in the price list. Rebuilt on every reload.</summary>
+    public List<SizeOption> Sizes
+    {
+        get => _sizes;
+        private set
+        {
+            var key = _size?.Key ?? "";
+            Set(ref _sizes, value);
+            SelectedSize = value.FirstOrDefault(o => o.Key == key) ?? value[0];
+        }
+    }
+
+    public SizeOption? SelectedSize
+    {
+        get => _size;
+        set { if (value != null && Set(ref _size, value)) Refilter(); }
     }
 
     /// <summary>"All" or a Category name; bound to the toggle buttons.</summary>
@@ -59,13 +99,12 @@ public sealed class PricesViewModel : ObservableObject, IPage
     public string CountText => Loc.F("Prices_Showing", View.Count, _rows.Count);
     public bool IsEmpty => View.Count == 0;
 
-    /// <summary>PR2/PR3: any part of the name, ignoring capitals, combined with the category.</summary>
+    /// <summary>PR2/PR3: any part of the name or company, ignoring capitals, combined with the size and category.</summary>
     private bool Matches(object o)
     {
         var row = (ProductRow)o;
         if (_category != "All" && row.Category.ToString() != _category) return false;
-        var key = Fmt.SearchKey(_searchText);
-        return key.Length == 0 || row.SearchKey.Contains(key, StringComparison.Ordinal);
+        return row.Matches(_nameKey, _companyKey, _size?.Key ?? "");
     }
 
     private void Refilter()

@@ -125,7 +125,8 @@ Two panels side by side: Products (456 wide), gap 16, Cart (`*`).
 **Products panel (left)**
 - Heading "Products" (20 semibold).
 - Row: label "Search" + text box (placeholder "Type part of the name"), filters the list as the user types.
-- Product table: Name `*` | Unit `84` | Price (Ks) `100`. Clicking a row selects it (`AccentTint`).
+- Row below it: label "Company" + text box (matches any part of the company), then label "Size" + dropdown (`128`) with "All" and each size on sale. The labels share a column so both boxes start at the same x. All three filters combine.
+- Product table: Name `*` | Unit `84` | Price (Ks) `100`. The name cell shows the name and size ("Glyphosate 1 L"), with the company on a second line in `TextSecondary`. Clicking a row selects it (`AccentTint`).
 - Under the table, a white 1 px panel with 12 padding: "Selected: <name>", then a row with label "Quantity", number box (88 wide, right-aligned, default 1), the unit text, and an "Add to cart" button on the right. Hint line "Whole numbers only for this product." For weight products the hint becomes "You can type decimals, for example 2.5" and the quantity box accepts decimals.
 - Double-click on a product row also adds it with quantity 1.
 
@@ -149,23 +150,25 @@ Saving a sale stores date, time, items, prices, total and amount paid in one SQL
 ### 7.2 Prices
 
 - Toolbar row 1: label "Search" + text box (360 wide, placeholder "Type part of the name"). On the right: "Add product", "Edit", "Import CSV" (opens 7.3).
-- Toolbar row 2: label "Category" + toggle buttons All, Pesticide, Herbicide, Fertilizer, Seed, Other. On the right, "Showing N of M products" in `TextSecondary`.
-- Table: Name `*` | Category `200` | Unit `240` | Price (Ks) `160`. Name, Category and Price headers are sortable buttons. Click again to reverse. Rows are selectable (`AccentTint`). Weight products show the unit as "kg (sold by weight)".
+- Toolbar row 2: label "Company" + text box (360 wide, placeholder "Type part of the company name"), then label "Size" + dropdown (`160`) with "All" and each size in the list. On the right, "Showing N of M products" in `TextSecondary`.
+- Toolbar row 3: label "Category" + toggle buttons All, Pesticide, Herbicide, Fertilizer, Seed, Other.
+- The three toolbar labels share one column, so the boxes line up.
+- Table: Name `*` | Company `180` | Size `120` | Category `160` | Unit `200` | Price (Ks) `140`. Name, Company, Category and Price headers are sortable buttons. Click again to reverse. Rows are selectable (`AccentTint`). Weight products show the unit as "kg (sold by weight)".
 - Empty state: "No products match. Check the spelling, or choose All."
-- Search is case-insensitive, matches any part of the name, and combines with the category filter.
+- Search is case-insensitive, matches any part of the name, and combines with the company, size and category filters. The company box also matches any part. Size matches the whole size, ignoring spaces and capitals, so "1 L" and "1l" are one entry.
 - "Edit" acts on the selected row. Deactivating is done in the edit dialog (not designed yet).
 
 ### 7.3 Import CSV dialog (1240 × 640)
 
 Title "Import products from CSV" (24 semibold). Three stacked blocks with 20 gap:
 
-1. "1. Choose the file" (18 semibold): label "File", text box with the path, "Choose file…" button. Hint under: "Columns: name, category, unit, price, sold by weight (yes or no). Save the file as 'CSV UTF-8' so Burmese names come in correctly."
+1. "1. Choose the file" (18 semibold): label "File", text box with the path, "Choose file…" button. Hint under: "Columns: name, category, unit, price, sold by weight (yes or no), company, size. Company and size can be left empty. Save the file as 'CSV UTF-8' so Burmese names come in correctly."
 2. "2. Check the rows" (18 semibold), with a summary on the right: "52 rows read: 9 new products, 31 price changes, 9 with no change, 3 with errors". Below it two tables side by side (`*` | `352`):
    - Left, "Rows to import (49)": Row `52` | Name `*` | Category `108` | Unit `112` | Price (Ks) `96` | What changes `168`. The last column reads "New product", "Price 15,000 → 16,000" (semibold) or "No change" (regular).
    - Right, "Rows with errors (3)": Row `52` | What is wrong `*`. Plain-language messages, for example "Price '12,5OO' is not a number. A letter O was typed instead of a zero."
 3. Footer: hint "Rows with errors are not imported. Fix them in the file and import it again." Then "Cancel" and the primary button "Import 49 rows" (min 180). The count is live.
 
-Import adds new products and updates the price of existing ones (match on name). Rows that cannot be read are listed, never skipped silently.
+Import adds new products and updates the price of existing ones (match on name, company and size). The Name column shows "Glyphosate 1 L (Green Valley)". Rows that cannot be read are listed, never skipped silently.
 
 ### 7.4 Debts
 
@@ -247,7 +250,7 @@ Import adds new products and updates the price of existing ones (match on name).
 
 ## 10. Not designed yet
 
-- Add / Edit product dialog (name, category, unit, price, sold by weight, active).
+- Add / Edit product dialog (name, company, size, category, unit, price, sold by weight, active). Company and size are optional. Two products may share a name if their company or size differs. Sales and reports name a product as "name size (company)".
 - New customer dialog (name, address, optional phone).
 - Backup and restore screen (daily backup folder, "Back up now", "Restore from copy").
 - Reverse repayment dialog (can reuse the Void sale dialog pattern).

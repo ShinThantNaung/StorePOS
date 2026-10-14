@@ -1,3 +1,4 @@
+using System.Globalization;
 using StorePOS.Infrastructure;
 using StorePOS.Models;
 
@@ -9,6 +10,11 @@ public sealed class ProductRow(Product p)
     public Product Product { get; } = p;
     public long Id => Product.Id;
     public string Name => Product.Name;
+    public string FullName => Product.FullName;
+    public string NameAndSize => Product.FormatFullName(Name, Size, "");
+    public string Company => Product.Company;
+    public string CompanySortKey => Company + "\u0001" + Name;
+    public string Size => Product.Size;
     public string Unit => Product.Unit;
     public bool SoldByWeight => Product.SoldByWeight;
     public long Price => Product.Price;
@@ -19,6 +25,30 @@ public sealed class ProductRow(Product p)
     public string UnitDisplay => Product.SoldByWeight ? Loc.F("Prices_UnitWeight", Product.Unit) : Product.Unit;
     public bool Inactive => !Product.Active;
     public string SearchKey { get; } = Fmt.SearchKey(p.Name);
+    public string CompanyKey { get; } = Fmt.SearchKey(p.Company);
+    public string SizeKey { get; } = Fmt.SizeKey(p.Size);
+
+    /// <summary>Part of the name, part of the company, and the exact size. An empty key matches all.</summary>
+    public bool Matches(string nameKey, string companyKey, string sizeKey) =>
+        (nameKey.Length == 0 || SearchKey.Contains(nameKey, StringComparison.Ordinal)) &&
+        (companyKey.Length == 0 || CompanyKey.Contains(companyKey, StringComparison.Ordinal)) &&
+        (sizeKey.Length == 0 || SizeKey == sizeKey);
+}
+
+/// <summary>An entry in the Size filter on Sales and Prices: "All", or one size as first typed.</summary>
+public sealed record SizeOption(string Key, string Display)
+{
+    private static readonly StringComparer Order =
+        StringComparer.Create(CultureInfo.InvariantCulture, CompareOptions.NumericOrdering | CompareOptions.IgnoreCase);
+
+    public static List<SizeOption> From(IEnumerable<ProductRow> rows) =>
+    [
+        new("", Loc.Get("Cat_All")),
+        .. rows.Where(r => r.SizeKey.Length > 0)
+            .GroupBy(r => r.SizeKey)
+            .Select(g => new SizeOption(g.Key, g.First().Size))
+            .OrderBy(o => o.Display, Order),
+    ];
 }
 
 public sealed class CustomerOption(Customer? customer)

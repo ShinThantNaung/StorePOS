@@ -5,7 +5,7 @@ namespace StorePOS.Data;
 /// <summary>The local SQLite file. Every write that touches more than one row runs in one transaction.</summary>
 public sealed class Db(string filePath)
 {
-    public const int SchemaVersion = 1;
+    public const int SchemaVersion = 2;
 
     public string FilePath { get; } = filePath;
 
@@ -35,13 +35,21 @@ public sealed class Db(string filePath)
         if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
         using var s = Write();
         var version = s.Scalar<long>("PRAGMA user_version");
-        if (version < 1)
-        {
-            s.Exec(Schema);
-            s.Exec($"PRAGMA user_version={SchemaVersion}");
-        }
+        if (version < 1) s.Exec(Schema);
+        if (version < 2) s.Exec(SchemaV2);
+        if (version < SchemaVersion) s.Exec($"PRAGMA user_version={SchemaVersion}");
         s.Commit();
     }
+
+    /// <summary>
+    /// Version 2: a product's company and size. name_key now holds name + company + size
+    /// (ProductService.IdentityKey), so the same name may exist for another company or size.
+    /// For products with neither it is still the plain name key, so old rows need no update.
+    /// </summary>
+    private const string SchemaV2 = """
+        ALTER TABLE products ADD COLUMN company TEXT NOT NULL DEFAULT '';
+        ALTER TABLE products ADD COLUMN size TEXT NOT NULL DEFAULT '';
+        """;
 
     private const string Schema = """
         CREATE TABLE IF NOT EXISTS products(

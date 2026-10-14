@@ -24,7 +24,7 @@ public sealed class CartLine : ObservableObject
     }
 
     public Product Product { get; }
-    public string Name => Product.Name;
+    public string Name => Product.FullName;
     public string Unit => Product.Unit;
     public long ListPrice { get; }
 
@@ -62,7 +62,7 @@ public sealed class CartLine : ObservableObject
     }
 
     public SaleLineInput ToInput() =>
-        new(Product.Id, Product.Name, Product.Unit, Product.SoldByWeight, Qty!.Value, Price!.Value, ListPrice);
+        new(Product.Id, Product.FullName, Product.Unit, Product.SoldByWeight, Qty!.Value, Price!.Value, ListPrice);
 
     private void Changed()
     {
@@ -77,6 +77,11 @@ public sealed class SalesViewModel : ObservableObject, IPage
     private readonly AppServices _s;
     private readonly BulkObservableCollection<ProductRow> _products = [];
     private string _searchText = "";
+    private string _companyText = "";
+    private string _nameKey = "";
+    private string _companyKey = "";
+    private List<SizeOption> _sizes = [];
+    private SizeOption? _size;
     private ProductRow? _selectedProduct;
     private string _quantityText = "1";
     private string _paidText = "";
@@ -109,6 +114,7 @@ public sealed class SalesViewModel : ObservableObject, IPage
     {
         var selectedId = SelectedProduct?.Id;
         _products.ReplaceAll(_s.Products.List(includeInactive: false).Select(p => new ProductRow(p)));
+        Sizes = SizeOption.From(_products);
         SelectedProduct = _products.FirstOrDefault(p => p.Id == selectedId);
         ReloadCustomers(SelectedCustomer?.Id);
     }
@@ -129,15 +135,45 @@ public sealed class SalesViewModel : ObservableObject, IPage
         set
         {
             if (!Set(ref _searchText, value)) return;
+            _nameKey = Fmt.SearchKey(value);
             ProductsView.Refresh();
         }
     }
 
-    private bool MatchesSearch(object o)
+    public string CompanyText
     {
-        var key = Fmt.SearchKey(_searchText);
-        return key.Length == 0 || ((ProductRow)o).SearchKey.Contains(key, StringComparison.Ordinal);
+        get => _companyText;
+        set
+        {
+            if (!Set(ref _companyText, value)) return;
+            _companyKey = Fmt.SearchKey(value);
+            ProductsView.Refresh();
+        }
     }
+
+    /// <summary>"All" first, then each size on sale. Rebuilt every time the screen opens.</summary>
+    public List<SizeOption> Sizes
+    {
+        get => _sizes;
+        private set
+        {
+            var key = _size?.Key ?? "";
+            Set(ref _sizes, value);
+            SelectedSize = value.FirstOrDefault(o => o.Key == key) ?? value[0];
+        }
+    }
+
+    public SizeOption? SelectedSize
+    {
+        get => _size;
+        set
+        {
+            if (value == null || !Set(ref _size, value)) return;
+            ProductsView.Refresh();
+        }
+    }
+
+    private bool MatchesSearch(object o) => ((ProductRow)o).Matches(_nameKey, _companyKey, _size?.Key ?? "");
 
     public ProductRow? SelectedProduct
     {
@@ -151,7 +187,7 @@ public sealed class SalesViewModel : ObservableObject, IPage
         }
     }
 
-    public string SelectedName => SelectedProduct?.Name ?? Loc.Get("Sales_NothingSelected");
+    public string SelectedName => SelectedProduct?.FullName ?? Loc.Get("Sales_NothingSelected");
 
     public string QuantityText
     {
