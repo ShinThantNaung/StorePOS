@@ -24,9 +24,14 @@ public sealed class TestShop : IDisposable
     public AppServices S { get; }
     public DateTime Now { get; set; } = new(2026, 10, 13, 9, 0, 0);
 
-    public Product AddProduct(string name, long price, bool weight = false, Category cat = Category.Pesticide)
+    public Product AddProduct(string name, long price, bool weight = false, Category cat = Category.Pesticide,
+        string company = "", string size = "")
     {
-        var p = new Product { Name = name, Category = cat, Unit = weight ? "kg" : "bottle", Price = price, SoldByWeight = weight };
+        var p = new Product
+        {
+            Name = name, Company = company, Size = size, Category = cat, Unit = weight ? "kg" : "bottle", Price = price,
+            SoldByWeight = weight,
+        };
         p.Id = S.Products.Save(p);
         return p;
     }

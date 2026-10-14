@@ -48,4 +48,44 @@ public class SpeedTests(ITestOutputHelper output)
         Assert.True(sales < TimeSpan.FromMilliseconds(500), $"Sales search took {sales.TotalMilliseconds} ms");
         Assert.True(prices < TimeSpan.FromMilliseconds(500), $"Prices search took {prices.TotalMilliseconds} ms");
     }
+
+    /// <summary>PRD: current stock for all products loads within one second with a year of stock movements.</summary>
+    [Fact]
+    public void Current_stock_loads_under_a_second_with_a_year_of_movements()
+    {
+        using var shop = new TestShop();
+        var csv = new StringBuilder();
+        for (var i = 0; i < 5000; i++) csv.AppendLine($"Product {i},Pesticide,bottle,{1000 + i},no");
+        shop.S.Import.Apply(shop.S.Import.Preview(Encoding.UTF8.GetBytes(csv.ToString())));
+        var ids = shop.S.Products.List(includeInactive: true).Select(p => p.Id).ToArray();
+
+        // A busy year: about 270 movements a day.
+        var rng = new Random(3);
+        var start = new DateTime(2025, 10, 13, 8, 0, 0);
+        using (var s = shop.S.Db.Write())
+        {
+            for (var i = 0; i < 100_000; i++)
+            {
+                var stockIn = i % 20 == 0;
+                s.Exec("INSERT INTO stock_movements(product_id, moved_at, change_milli, kind) VALUES($p, $t, $q, $k)",
+                    ("$p", ids[rng.Next(ids.Length)]), ("$t", Infrastructure.Fmt.DbTime(start.AddMinutes(i * 5.25))),
+                    ("$q", stockIn ? 24_000 : -1_000 * rng.Next(1, 4)), ("$k", stockIn ? "stock_in" : "sale"));
+            }
+            s.Commit();
+        }
+
+        var main = new MainViewModel(shop.S);
+        var sw = Stopwatch.StartNew();
+        main.Navigate(Section.Stock);
+        var load = sw.Elapsed;
+        Assert.Equal(5000, main.StockPage.View.Count);
+
+        sw.Restart();
+        main.StockPage.Selected = main.StockPage.View.Cast<StockRow>().First();
+        var history = sw.Elapsed;
+
+        output.WriteLine($"Stock screen load: {load.TotalMilliseconds:F0} ms, one product's history: {history.TotalMilliseconds:F0} ms");
+        Assert.True(load < TimeSpan.FromSeconds(1), $"Stock screen took {load.TotalMilliseconds} ms");
+        Assert.True(history < TimeSpan.FromMilliseconds(500), $"Stock history took {history.TotalMilliseconds} ms");
+    }
 }
