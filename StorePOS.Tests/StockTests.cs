@@ -1,5 +1,6 @@
 using StorePOS.Infrastructure;
 using StorePOS.Models;
+using StorePOS.ViewModels;
 
 namespace StorePOS.Tests;
 
@@ -42,18 +43,49 @@ public class StockTests
     }
 
     [Fact]
-    public void A_sale_may_take_stock_below_zero_and_the_product_shows_out()
+    public void A_sale_cannot_take_more_than_is_in_stock()
     {
         using var shop = new TestShop();
-        var paraquat = shop.AddProduct("Paraquat", 8500);
-        shop.S.Stock.Adjust(paraquat.Id, 1, AdjustReason.CountWrong, null);
+        var paraquat = shop.AddProduct("Paraquat", 8500, stock: 1);
+        var urea = shop.AddProduct("Urea (loose)", 2200, weight: true, stock: 2.5m);
 
-        shop.Sell(shop.Now.AddHours(1), 17000, null, TestShop.Line(paraquat, 2));
+        var ex = Assert.Throws<DomainException>(() => shop.Sell(shop.Now, 17000, null, TestShop.Line(paraquat, 2)));
+        Assert.Contains("1 bottle", ex.Message);
+        // Two lines of one product, one at a changed price, count together.
+        Assert.Throws<DomainException>(() => shop.Sell(shop.Now, 16500, null,
+            TestShop.Line(paraquat, 1), TestShop.Line(paraquat, 1, price: 8000)));
+        Assert.Throws<DomainException>(() => shop.Sell(shop.Now, 6000, null, TestShop.Line(urea, 2.501m)));
 
-        var level = shop.S.Stock.Levels().Single();
-        Assert.Equal(-1, level.OnHand);
-        Assert.True(level.IsOut);
-        Assert.Null(level.LastStockIn);
+        // Nothing of a refused sale is saved.
+        Assert.Empty(shop.S.Sales.SalesBetween(shop.Now.Date, shop.Now.Date.AddDays(1)));
+        Assert.Equal(1, OnHand(shop, paraquat));
+
+        shop.Sell(shop.Now, 14000, null, TestShop.Line(paraquat, 1), TestShop.Line(urea, 2.5m));
+        Assert.All(shop.S.Stock.Levels(), l => Assert.Equal(0, l.OnHand));
+        Assert.Throws<DomainException>(() => shop.Sell(shop.Now, 8500, null, TestShop.Line(paraquat, 1)));
+    }
+
+    [Fact]
+    public void The_sales_screen_will_not_save_a_cart_that_takes_more_than_is_in_stock()
+    {
+        using var shop = new TestShop();
+        var p = shop.AddProduct("Paraquat", 8500, stock: 1);
+        var sales = new MainViewModel(shop.S).SalesPage;
+        sales.Activate();
+        var row = sales.ProductsView.Cast<ProductRow>().Single();
+        sales.AddOne(row);
+        sales.AddOne(row);
+        sales.PaidText = "17000";
+
+        Assert.False(sales.CanSave);
+        Assert.StartsWith("Not enough Paraquat in stock: the app has 1 bottle.", sales.Problem);
+
+        // The shelf had more: once the count is corrected, the same cart can be saved.
+        shop.S.Stock.Adjust(p.Id, 5, AdjustReason.CountWrong, null);
+        sales.Activate();
+        Assert.True(sales.CanSave);
+        sales.SaveCommand.Execute(null);
+        Assert.Equal(3, OnHand(shop, p));
     }
 
     [Fact]
@@ -146,7 +178,7 @@ public class StockTests
     public void Voiding_a_sale_saved_before_stock_was_tracked_returns_nothing()
     {
         using var shop = new TestShop();
-        var p = shop.AddProduct("Mancozeb", 11000);
+        var p = shop.AddProduct("Mancozeb", 11000, stock: 1);
         var sale = shop.Sell(shop.Now, 11000, null, TestShop.Line(p, 1));
         using (var s = shop.S.Db.Write())
         {
@@ -157,7 +189,8 @@ public class StockTests
 
         shop.S.Sales.Void(sale, "Entered twice");
 
-        Assert.Equal(0, OnHand(shop, p));
-        Assert.Empty(shop.S.Stock.Movements(p.Id));
+        // Only the opening count is left.
+        Assert.Equal(1, OnHand(shop, p));
+        Assert.Equal(StockMoveKind.Adjustment, Assert.Single(shop.S.Stock.Movements(p.Id)).Kind);
     }
 }

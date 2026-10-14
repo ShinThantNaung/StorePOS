@@ -74,7 +74,7 @@ public class PriceHistoryTests
     public void A_price_changed_for_one_sale_is_not_a_price_change()
     {
         using var shop = new TestShop();
-        var p = shop.AddProduct("Paraquat", 8500);
+        var p = shop.AddProduct("Paraquat", 8500, stock: 100);
         shop.Sell(shop.Now.AddHours(1), 8000, null, TestShop.Line(p, 1, price: 8000));
 
         Assert.Equal(8500, shop.S.Products.Get(p.Id)!.Price);

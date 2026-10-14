@@ -74,7 +74,7 @@ public class ImportAndBackupTests
     public void Backup_and_restore_round_trip_keeps_a_safety_copy()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         shop.Sell(shop.Now, 15000, null, TestShop.Line(gly, 1));
         var copy = shop.S.Backup.BackupNow();
         Assert.True(File.Exists(copy));

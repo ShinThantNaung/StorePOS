@@ -24,8 +24,9 @@ public sealed class TestShop : IDisposable
     public AppServices S { get; }
     public DateTime Now { get; set; } = new(2026, 10, 13, 9, 0, 0);
 
+    /// <summary>A product. A sale needs stock, so <paramref name="stock"/> is entered as its opening count.</summary>
     public Product AddProduct(string name, long price, bool weight = false, Category cat = Category.Pesticide,
-        string company = "", string size = "")
+        string company = "", string size = "", decimal stock = 0)
     {
         var p = new Product
         {
@@ -33,6 +34,7 @@ public sealed class TestShop : IDisposable
             SoldByWeight = weight,
         };
         p.Id = S.Products.Save(p);
+        if (stock > 0) S.Stock.Adjust(p.Id, stock, AdjustReason.CountWrong, "Opening count");
         return p;
     }
 

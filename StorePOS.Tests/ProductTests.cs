@@ -43,8 +43,8 @@ public class ProductTests
     public void Reports_name_products_with_their_size_and_company()
     {
         using var shop = new TestShop();
-        var a = shop.AddProduct("Glyphosate", 15000, company: "Green Valley", size: "1 L");
-        var b = shop.AddProduct("Glyphosate", 14500, company: "Golden Harvest", size: "1 L");
+        var a = shop.AddProduct("Glyphosate", 15000, company: "Green Valley", size: "1 L", stock: 100);
+        var b = shop.AddProduct("Glyphosate", 14500, company: "Golden Harvest", size: "1 L", stock: 100);
         shop.Sell(shop.Now, 29500, null, TestShop.Line(a, 1), TestShop.Line(b, 1));
 
         var names = shop.S.Reports.ProductSales(shop.Now.Date, shop.Now.Date.AddDays(1)).Select(p => p.Name).Order();

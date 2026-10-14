@@ -114,7 +114,7 @@ docs/                     ERD and class diagrams
 - **Every write that touches more than one row is one transaction.** A sale, its items, its stock movements and its debt are saved together or not at all.
 - **Nothing is deleted.** Sales are voided and repayments are reversed, each with a reason, so the history is always complete.
 - **Sales copy the product name and price**, so editing a product later never changes a past sale.
-- **Stock can go below zero.** The shelf may be right and the app wrong, so a sale is never blocked; the product shows OUT until the count is fixed.
+- **Stock never goes below zero.** A sale that asks for more than the app has cannot be saved. If the shelf has more, fix the count with Adjust count first.
 
 ## Tests
 

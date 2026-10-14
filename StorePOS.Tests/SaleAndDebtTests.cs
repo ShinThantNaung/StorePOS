@@ -9,7 +9,7 @@ public class SaleAndDebtTests
     public void Paid_in_full_sale_needs_no_customer_and_creates_no_debt()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var id = shop.Sell(shop.Now, 50000, null, TestShop.Line(gly, 2));
 
         var sale = shop.S.Sales.SalesBetween(shop.Now.Date, shop.Now.Date.AddDays(1)).Single();
@@ -40,8 +40,8 @@ public class SaleAndDebtTests
     public void Prices_are_copied_so_later_price_changes_never_alter_past_sales()
     {
         using var shop = new TestShop();
-        var urea = shop.AddProduct("Urea fertilizer (loose)", 2200, weight: true);
-        var para = shop.AddProduct("Paraquat herbicide 500 ml", 8500);
+        var urea = shop.AddProduct("Urea fertilizer (loose)", 2200, weight: true, stock: 100);
+        var para = shop.AddProduct("Paraquat herbicide 500 ml", 8500, stock: 100);
         // TX3: negotiated price for this sale only.
         shop.Sell(shop.Now, 13500, null, TestShop.Line(urea, 2.5m), TestShop.Line(para, 1, price: 8000));
 
@@ -61,8 +61,8 @@ public class SaleAndDebtTests
     public void Part_paid_sale_creates_debt_and_two_repayments_clear_it()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
-        var rice = shop.AddProduct("Rice seed 1 kg pack", 3500);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
+        var rice = shop.AddProduct("Rice seed 1 kg pack", 3500, stock: 100);
         var aung = shop.AddCustomer("U Aung Myint");
 
         var saleId = shop.Sell(new DateTime(2026, 10, 1, 9, 0, 0), 50000, aung,
@@ -89,7 +89,7 @@ public class SaleAndDebtTests
     public void One_repayment_is_spread_across_debts_oldest_first()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var khin = shop.AddCustomer("Daw Khin Mya");
         shop.Sell(new DateTime(2026, 9, 1, 9, 0, 0), 0, khin, TestShop.Line(gly, 1));  // owes 15,000
         shop.Sell(new DateTime(2026, 9, 20, 9, 0, 0), 0, khin, TestShop.Line(gly, 2)); // owes 30,000
@@ -109,7 +109,7 @@ public class SaleAndDebtTests
     public void Repayment_larger_than_balance_is_refused()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var c = shop.AddCustomer("Ko Htet Aung");
         shop.Sell(shop.Now, 5000, c, TestShop.Line(gly, 1));
         Assert.Throws<DomainException>(() => shop.S.Debts.RecordRepayment(c, 10001, shop.Now.Date));
@@ -120,7 +120,7 @@ public class SaleAndDebtTests
     public void Reversed_repayment_stays_in_history_and_the_debt_returns()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var c = shop.AddCustomer("U Myo Win");
         shop.Sell(shop.Now, 0, c, TestShop.Line(gly, 2));
         var rep = shop.S.Debts.RecordRepayment(c, 20000, shop.Now.Date);
@@ -141,7 +141,7 @@ public class SaleAndDebtTests
     public void Voiding_a_credit_sale_removes_its_debt()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var c = shop.AddCustomer("Daw Thida");
         var id = shop.Sell(shop.Now, 5000, c, TestShop.Line(gly, 1));
         Assert.Throws<DomainException>(() => shop.S.Sales.Void(id, "  "));
@@ -158,7 +158,7 @@ public class SaleAndDebtTests
     public void Voiding_a_sale_that_was_already_repaid_is_blocked_and_nothing_changes()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var c = shop.AddCustomer("U Tun Tun");
         var id = shop.Sell(shop.Now, 0, c, TestShop.Line(gly, 1));
         shop.S.Debts.RecordRepayment(c, 10000, shop.Now.Date);

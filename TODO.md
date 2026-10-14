@@ -6,7 +6,7 @@ Last updated: 14 Oct 2026.
 - **Screens:** all screens from design.md: Sales, Prices, Debts, Customer detail, and Reports (daily and weekly). There is also a Backup and language screen (the last sidebar item).
 - **Dialogs:** Confirm, Void sale, Reverse repayment, Import CSV, Record repayment, Add/Edit product, New/Edit customer, Message, Record stock in, Adjust stock count, Price history.
 - **Stock (PRD Feature 5):** a Stock sidebar item with two views, Current stock and Stock-in history, plus the Record stock in and Adjust stock count dialogs (design.md 7.7).
-  - Saving a sale takes stock out and voiding puts it back, in the same transaction as the sale or void. A sale may take stock below zero; the product then shows OUT.
+  - Saving a sale takes stock out and voiding puts it back, in the same transaction as the sale or void. A sale cannot take more than is in stock: the Sales screen says how much the app has and "Save sale" stays disabled (PRD ST8, changed 14 Oct). A product at zero shows OUT.
   - Stock is always the sum of `stock_movements`. Nothing in it is edited or deleted.
   - Opening an older database adds the stock tables automatically (schema version 3).
 - **Price history (PR8, PR9):** every price is recorded with its date and time, old and new price, and where it came from (Add product, Edit product, or a CSV import with the file name), in the same transaction as the product. Prices has a "Price changed" column (sortable) and a "Price history" button that opens design.md 7.3b. A price changed on one cart line is not a price change. Opening an older database adds the table (schema version 4).
@@ -16,18 +16,18 @@ Last updated: 14 Oct 2026.
 - **Data:** SQLite with all 11 PRD tables. Money is stored in whole kyat and quantities in thousandths. Debts are paid off oldest first, and a sale with its debt is saved in one transaction.
 - **Reports:** Excel export (.xlsx) and PDF export. Exports run in the background, so the window never freezes.
 - **Backup:** an automatic copy once a day, "Back up now", and restore. Restore saves a safety copy of the current data first.
-- **Screen text:** all of it is in `StorePOS/Resources/Strings.resx` (English) and `Strings.my.resx` (Burmese), with the same 399 keys.
+- **Screen text:** all of it is in `StorePOS/Resources/Strings.resx` (English) and `Strings.my.resx` (Burmese), with the same 400 keys.
 - **Checked on screen in both languages** (rendered screenshots of every screen and dialog):
   - Digits stay Latin in Burmese.
   - Nothing is clipped.
   - Headers wrap.
   - Burmese text in the PDF is shaped correctly.
-- **Tests:** `dotnet test StorePOS.Tests` runs 59 tests and all pass. They cover:
+- **Tests:** `dotnet test StorePOS.Tests` runs 60 tests and all pass. They cover:
   - the PRD "done when" checks for debts and for weekly report totals;
   - CSV import, backup and restore, Excel and PDF export;
   - company and size: uniqueness, filters, CSV columns, and upgrading an older database;
   - price history: adding, editing, CSV import with its file name, an out-of-date import preview, and a price changed for one sale only;
-  - stock: the PRD Feature 5 "done when" check (opening count, delivery, three sales, one void), whole-number rules, deliveries, adjustments, and selling below zero;
+  - stock: the PRD Feature 5 "done when" check (opening count, delivery, three sales, one void), whole-number rules, deliveries, adjustments, and refusing a sale that takes more than is in stock (on the Sales screen and in the service);
   - **speed:** with 5,000 products, a search takes 2 ms per keystroke on Sales and 8 ms on Prices (the limit is 500 ms). With a year of stock movements (100,000), the Stock screen loads in about 0.2 s (the limit is 1 s).
 - **Published build checked:** the window opens in 1.1–1.8 s (the limit is 5 s), Burmese works, and the automatic backup runs once a day.
 
@@ -43,6 +43,7 @@ Last updated: 14 Oct 2026.
 1. **Have a native speaker review the Burmese translations.** Claude drafted all of `Strings.my.resx`. Check these choices in particular:
    - "Stock" = လက်ကျန်, "Stock in" = ပစ္စည်းဝင်, "From" (supplier) = ပေးသွင်းသူ, "OUT" = ကုန်, "App says" = အက်ပ်တွင်
    - "Price changed" = ဈေး ပြောင်းသည့်နေ့, "How it changed" = ပြောင်းလဲပုံ, "First price" = ပထမ ဈေးနှုန်း
+   - "Not enough X in stock: the app has N" = {0} လက်ကျန် မလုံလောက်ပါ - အက်ပ်တွင် {1} သာ ရှိသည်။
    - "Walk-in" = လက်လီဝယ်သူ
    - "Reports" = စာရင်းချုပ်
    - "Reverse" = ပြန်ရုပ်
@@ -51,7 +52,7 @@ Last updated: 14 Oct 2026.
 2. **Install Inno Setup 6 and run `.\build-installer.ps1`** to get the single installer file. The script is ready, but it has not been compiled because Inno Setup is not installed on this laptop.
 3. **Test on the shop laptop** at 1366 × 768 and 100% scaling, using the real CSV price list (PRD Feature 2 "done when").
 4. **Commit to git.** Stock, price history, the shop header and the unit dropdown are not committed yet. The untracked `Untitled.md` and `Untitled (1).pdf` in the repo root need a decision: commit them or delete them.
-5. **Enter the opening stock:** count every product once with Adjust count (reason "Count was wrong"), PRD ST10. Until then every product shows OUT.
+5. **Enter the opening stock:** count every product once with Adjust count (reason "Count was wrong"), PRD ST10. Until then every product shows OUT and **no sale can be saved**, because a sale cannot take more than is in stock.
 6. **Milestone 6 trial:** run the app next to the ledger book for two weeks and compare the totals.
 7. **Optional:**
    - Add an app icon.

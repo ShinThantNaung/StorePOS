@@ -120,6 +120,7 @@ classDiagram
     class StockService {
         +Levels() List~StockLevel~
         +OnHand(productId) decimal
+        +OnHandAll() Dictionary~long, decimal~
         +Movements(productId) List~StockMovement~
         +RecordStockIn(day, supplier, note, lines) long
         +Adjust(productId, counted, reason, note) decimal
@@ -642,6 +643,7 @@ sequenceDiagram
     VM->>S: Save(cart lines, tendered, customerId)
     S->>S: validate quantities, prices, customer
     S->>DB: Write() (begin transaction)
+    S->>DB: SUM stock_movements per product (refuse if the cart takes more than is in stock)
     S->>DB: INSERT sales
     loop each cart line
         S->>DB: INSERT sale_items

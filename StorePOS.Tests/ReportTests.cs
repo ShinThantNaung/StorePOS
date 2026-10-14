@@ -9,8 +9,8 @@ public class ReportTests
     public void Weekly_figures_equal_the_sum_of_the_seven_days()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
-        var urea = shop.AddProduct("Urea fertilizer (loose)", 2200, weight: true);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 1000);
+        var urea = shop.AddProduct("Urea fertilizer (loose)", 2200, weight: true, stock: 1000);
         var c = shop.AddCustomer("Daw Khin Mya");
         var monday = new DateTime(2026, 10, 5);
         var rng = new Random(3);
@@ -47,7 +47,7 @@ public class ReportTests
     public void Daily_figures_follow_the_metric_definitions()
     {
         using var shop = new TestShop();
-        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000);
+        var gly = shop.AddProduct("Glyphosate herbicide 1 L", 15000, stock: 100);
         var c = shop.AddCustomer("U Aung Myint");
         var day = new DateTime(2026, 10, 13);
         shop.Sell(day.AddHours(8), 50000, null, TestShop.Line(gly, 2));   // 30,000 cash, change given
@@ -71,9 +71,9 @@ public class ReportTests
     public void Best_and_slow_sellers_include_products_with_no_sales()
     {
         using var shop = new TestShop();
-        var a = shop.AddProduct("A cheap item", 1000);
-        var b = shop.AddProduct("B expensive item", 50000);
-        var urea = shop.AddProduct("Urea fertilizer (loose)", 2200, weight: true);
+        var a = shop.AddProduct("A cheap item", 1000, stock: 100);
+        var b = shop.AddProduct("B expensive item", 50000, stock: 100);
+        var urea = shop.AddProduct("Urea fertilizer (loose)", 2200, weight: true, stock: 100);
         var unsold = shop.AddProduct("Unsold item", 7000);
         var day = new DateTime(2026, 10, 13);
         shop.Sell(day.AddHours(8), 100000, null, TestShop.Line(a, 10), TestShop.Line(b, 1), TestShop.Line(urea, 12.5m));
